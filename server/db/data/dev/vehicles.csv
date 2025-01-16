@@ -1,0 +1,6 @@
+vehicleID;userID;name;model;description;consumption;electric
+1e201408-4345-4d40-b78b-3e31b6d8525d;2cac8c5e-85b4-4522-b543-fd17e401fe3f;Road Runner;Toyota Yaris Hybrid;Hybrid vehicle with excellent fuel economy;4.2;0
+f75f9dff-f9ca-4a4e-a583-48b63e960170;2cac8c5e-85b4-4522-b543-fd17e401fe3f;Eco Cruiser;Tesla Model 3;Electric car with long range and autopilot;15.0;1
+55df3440-69d6-43ea-a95d-94ba19b06f80;0b3b78f4-fa26-4498-ad64-e5af7568b2d5;Family Van;Volkswagen Multivan;Spacious van suitable for families;7.8;0
+d22e747b-64be-441e-85dd-e4c119efb8e0;fdbb5e03-7276-4f22-b37a-964efbd7e209;City Zipper;Renault Zoe;Compact electric car for urban use;13.5;1
+769be576-16a4-40a9-81c8-6ce16ed72767;fdbb5e03-7276-4f22-b37a-964efbd7e209;Adventure Ride;Jeep Wrangler;Off-road vehicle with rugged design;10.5;0

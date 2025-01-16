@@ -9,6 +9,7 @@ export function up(knex) {
         table.uuid('additionalCostID').notNullable();
         table.uuid('rideID').nullable();
         table.decimal('derivedAmount', 10, 2).notNullable();
+        table.boolean('paid').notNullable().defaultTo(false);
         table.dateTime('inflictionDatetime').notNullable().defaultTo(knex.fn.now());
     
         table.foreign('userID').references('userID').inTable('User').onDelete('CASCADE');

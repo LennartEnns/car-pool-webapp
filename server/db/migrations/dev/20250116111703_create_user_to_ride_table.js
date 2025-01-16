@@ -6,7 +6,6 @@ export function up(knex) {
     return knex.schema.createTable('UserToRide', (table) => {
         table.uuid('userID').notNullable();
         table.uuid('rideID').notNullable();
-        table.boolean('paid').notNullable();
         table.boolean('bothWays').notNullable();
     
         table.primary(['userID', 'rideID']);

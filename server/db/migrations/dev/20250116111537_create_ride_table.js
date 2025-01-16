@@ -6,7 +6,8 @@ export function up(knex) {
     return knex.schema.createTable('Ride', (table) => {
         table.uuid('rideID').primary().defaultTo(knex.fn.uuid());
         table.uuid('routeID').notNullable();
-        table.dateTime('rideDatetime').notNullable();
+        table.dateTime('startDatetime').nullable();
+        table.dateTime('arrivalDatetime').notNullable();
         table.decimal('customDistance', 10, 2).nullable();
         table.boolean('customBothWays').nullable();
     

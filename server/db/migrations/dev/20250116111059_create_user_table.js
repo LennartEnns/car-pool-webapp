@@ -5,7 +5,8 @@
 export function up(knex) {
     return knex.schema.createTable('User', (table) => {
         table.uuid('userID').primary().defaultTo(knex.fn.uuid());
-        table.string('name', 40).notNullable();
+        table.string('username', 50).unique().notNullable;
+        table.string('name', 50).nullable();
     });
 }
 

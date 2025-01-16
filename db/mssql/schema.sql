@@ -5,7 +5,8 @@ CREATE TABLE Currency (
 
 CREATE TABLE User (
     userID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    name NVARCHAR(40) NOT NULL
+    username NVARCHAR(50) UNIQUE NOT NULL,
+    name NVARCHAR(50) NULL
 );
 
 CREATE TABLE Vehicle (
@@ -42,7 +43,8 @@ CREATE TABLE Route (
 CREATE TABLE Ride (
     rideID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     routeID UNIQUEIDENTIFIER NOT NULL,
-    rideDatetime DATETIME NOT NULL,
+    startDatetime DATETIME NULL,
+    arrivalDatetime DATETIME NOT NULL,
     customDistance DECIMAL(10, 2) NULL, -- Overrides Route distance (optional)
     customBothWays BIT NULL, -- Overrides Route bothWays (optional)
     FOREIGN KEY (routeID) REFERENCES Route(routeID) ON DELETE CASCADE
@@ -51,7 +53,6 @@ CREATE TABLE Ride (
 CREATE TABLE UserToRide (
     userID UNIQUEIDENTIFIER NOT NULL,
     rideID UNIQUEIDENTIFIER NOT NULL,
-    paid BIT NOT NULL,                   -- boolean: whether this user paid for the ride
     bothWays BIT NOT NULL,               -- boolean: whether the user takes the ride both ways
     PRIMARY KEY (userID, rideID),
     FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
@@ -85,6 +86,7 @@ CREATE TABLE AdditionalCostInfliction (
     additionalCostID UNIQUEIDENTIFIER NOT NULL,
     rideID UNIQUEIDENTIFIER NULL, -- ID of the ride a per-ride cost was inflicted for (NULL if AdditionalCost.period is not 'r' or 'k')
     derivedAmount DECIMAL(10, 2) NOT NULL, -- Final cost amount for the user
+    paid BIT NOT NULL DEFAULT 0, -- Whether the infliction has been paid by the user
     inflictionDatetime DATETIME NOT NULL DEFAULT GETDATE(), -- Datetime of infliction with current datetime as default
     FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
     FOREIGN KEY (additionalCostID) REFERENCES AdditionalCost(additionalCostID) ON DELETE CASCADE,

@@ -27,4 +27,7 @@ export default defineEventHandler(async (event) => {
   }
 
   console.log('JWT token is valid');
+
+  // Add relevant user information to the event context
+  event.context.user = { username: decoded.username };
 })

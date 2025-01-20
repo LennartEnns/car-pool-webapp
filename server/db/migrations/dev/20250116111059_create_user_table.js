@@ -7,6 +7,7 @@ export function up(knex) {
         table.uuid('userID').primary().defaultTo(knex.fn.uuid());
         table.string('username', 50).unique().notNullable;
         table.string('name', 50).nullable();
+        table.string('pwHash', 60).notNullable();
     });
 }
 

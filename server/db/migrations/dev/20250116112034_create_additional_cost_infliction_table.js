@@ -8,7 +8,7 @@ export function up(knex) {
         table.uuid('userID').notNullable();
         table.uuid('additionalCostID').notNullable();
         table.uuid('rideID').nullable();
-        table.decimal('derivedAmount', 10, 2).notNullable();
+        // table.decimal('derivedAmount', 10, 2).notNullable();
         table.boolean('paid').notNullable().defaultTo(false);
         table.dateTime('inflictionDatetime').notNullable().defaultTo(knex.fn.now());
     

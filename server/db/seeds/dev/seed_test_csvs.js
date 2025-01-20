@@ -15,9 +15,11 @@ export async function seed(knex) {
     routes: 'route',
     rides: 'ride',
     userToRide: 'userToRide',
+    userToRoute: 'userToRoute',
     additionalCosts: 'additionalCost',
     additionalCostToRide: 'additionalCostToRide',
-    additionalCostInfliction: 'additionalCostInfliction',
+    additionalCostInflictions: 'additionalCostInfliction',
+    periodicCostPauses: 'periodicCostPause',
   };
   
   // Delete all existing entries

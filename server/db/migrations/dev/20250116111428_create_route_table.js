@@ -9,9 +9,9 @@ export function up(knex) {
         table.uuid('vehicleID').notNullable();
         table.string('description', 255).notNullable();
         table.decimal('distance', 10, 2).notNullable().comment('In kilometers');
-        table.string('fromLocation', 60).notNullable();
-        table.string('toLocation', 60).notNullable();
-        table.boolean('bothWays').notNullable().comment('1 for both ways, 0 for one way');
+        table.string('location1', 60).notNullable();
+        table.string('location2', 60).notNullable();
+        table.boolean('defaultBothWays').notNullable().comment('1 for both ways, 0 for one way');
         table.date('validFrom').notNullable();
         table.date('validTo').notNullable();
         table.binary('schedule', 1).nullable().comment('e.g., 01111100 for weekdays. First bit should be 0.');

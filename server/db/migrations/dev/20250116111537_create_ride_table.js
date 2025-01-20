@@ -10,6 +10,7 @@ export function up(knex) {
         table.dateTime('arrivalDatetime').notNullable();
         table.decimal('customDistance', 10, 2).nullable();
         table.boolean('customBothWays').nullable();
+        table.boolean('reverseDirection').notNullable().defaultTo(false);
     
         table.foreign('routeID').references('routeID').inTable('Route').onDelete('CASCADE');
     });

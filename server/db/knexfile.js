@@ -2,7 +2,7 @@ export default {
     development: {
       client: 'sqlite3',
       connection: {
-        filename: ':memory:',
+        filename: './server/db/dev/dev.sqlite3',
       },
       useNullAsDefault: true,
       seeds: {
@@ -25,4 +25,4 @@ export default {
     },
 };
 
-// npx knex migrate:make create_additional_cost_infliction_table --knexfile ./server/db/knexfile.js --migrations-directory ./migrations/dev
+// npx knex migrate:make create_periodic_cost_pause_table --knexfile ./server/db/knexfile.js --migrations-directory ./migrations/dev

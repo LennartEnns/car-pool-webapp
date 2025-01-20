@@ -1,4 +1,4 @@
 routeID;userID;vehicleID;description;distance;location1;location2;defaultBothWays;validFrom;validTo;schedule;currencyCode;relativeFuelCost;customConsumption
-cc0b91c2-c273-40bb-8066-103377908fbb;2cac8c5e-85b4-4522-b543-fd17e401fe3f;1e201408-4345-4d40-b78b-3e31b6d8525d;Route for DHBW students. I can pick you up on my way!;61;Sandhausen;DHBW Karlsruhe;1;2025-01-01;9999-01-01;124;EUR;1.60;NULL
-f4e89922-457f-4563-bdfe-9b7b54e49ec1;0b3b78f4-fa26-4498-ad64-e5af7568b2d5;55df3440-69d6-43ea-a95d-94ba19b06f80;Some very long route;1000;Berlin;Paris;0;2025-08-05;2025-08-06;NULL;USD;1.50;8.2
-09910afc-d363-4294-909e-687a78a1cba8;fdbb5e03-7276-4f22-b37a-964efbd7e209;d22e747b-64be-441e-85dd-e4c119efb8e0;Some very short route;0.15;My House;My neighbour's house;1;2025-01-01;2028-06-17;3;USD;0.50;NULL
+cc0b91c2-c273-40bb-8066-103377908fbb;2cac8c5e-85b4-4522-b543-fd17e401fe3f;1e201408-4345-4d40-b78b-3e31b6d8525d;Route for DHBW students. I can pick you up on my way!;61;Sandhausen;DHBW Karlsruhe;1;2025-01-01;9999-01-01;124;EUR;1.60;
+f4e89922-457f-4563-bdfe-9b7b54e49ec1;0b3b78f4-fa26-4498-ad64-e5af7568b2d5;55df3440-69d6-43ea-a95d-94ba19b06f80;Some very long route;1000;Berlin;Paris;0;2025-08-05;2025-08-06;;USD;1.50;8.2
+09910afc-d363-4294-909e-687a78a1cba8;fdbb5e03-7276-4f22-b37a-964efbd7e209;d22e747b-64be-441e-85dd-e4c119efb8e0;Some very short route;0.15;My House;My neighbour's house;1;2025-01-01;2028-06-17;3;USD;0.50;

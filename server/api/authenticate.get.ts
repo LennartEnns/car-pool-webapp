@@ -8,11 +8,11 @@ export default defineEventHandler(async (event) => {
     throw createError({statusCode: 401, message: 'Unauthorized'});
   }
 
-  const { username, name } = user;
+  const { userID, username, name } = user;
   const runtimeConfig = useRuntimeConfig(event);
   const privateKey = runtimeConfig.jwtPrivateKey as string;
   const expirationTime = runtimeConfig.jwtExpirationTime as string;
 
-  const token = jwt.sign({ username, name }, privateKey, { algorithm: 'ES512', expiresIn: expirationTime });
+  const token = jwt.sign({ userID, username, name }, privateKey, { algorithm: 'ES512', expiresIn: expirationTime });
   return { token };
 })

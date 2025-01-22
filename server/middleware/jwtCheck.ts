@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   const publicKey = runtimeConfig.jwtPublicKey as string;
   const decoded = jwt.verify(jwtToken, publicKey, { algorithms: ['ES512'], clockTimestamp: new Date().getSeconds() }) as JwtPayload;
 
-  if (!decoded) {
+  if (!decoded || !decoded.userID) {
     console.log('JWT token is invalid');
     throw createError(error401);
   }
@@ -29,5 +29,5 @@ export default defineEventHandler(async (event) => {
   console.log('JWT token is valid');
 
   // Add relevant user information to the event context
-  event.context.user = { username: decoded.username };
+  event.context.user = { userID: decoded.userID };
 })

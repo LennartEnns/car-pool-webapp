@@ -70,7 +70,7 @@ CREATE TABLE UserToRoute (
     PRIMARY KEY (userID, routeID),
     FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
     FOREIGN KEY (routeID) REFERENCES Route(routeID) ON DELETE CASCADE
-)
+);
 
 CREATE TABLE AdditionalCost (
     additionalCostID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
@@ -113,4 +113,4 @@ CREATE TABLE PeriodicCostPause (
     pauseUntil DATE NOT NULL,
 
     FOREIGN KEY (additionalCostID) REFERENCES AdditionalCost(additionalCostID) ON DELETE CASCADE,
-)
+);

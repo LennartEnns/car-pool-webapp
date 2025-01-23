@@ -1,30 +1,37 @@
 <template>
   <div>
-    <p>Hello, {{ username }}! Your real name is {{ realName || 'unknown' }}!</p>
-    <p>{{ vehicles.vehicles }}</p>
-    <v-btn @click="onPostClick()">Post</v-btn>
+    <p>Hello, {{ username }} a.k.a. {{ userID }}! Your real name is {{ realName || 'unknown' }}!</p>
+    <p class=""></p>
+    <p>{{ vehicles }}</p>
+    <v-btn class="" @click="onPostClick()">Post</v-btn>
     <v-btn @click="onPatchClick()">Update</v-btn>
+    <v-btn @click="onDeleteClick()">Delete</v-btn>
   </div>
 </template>
 
 <script setup>
   const jwtCookie = useCookie('jwt');
   const { userID, username, name: realName } = parseJwtPayload(jwtCookie.value);
-  const { data: vehicles } = useFetch('/api/vehicles', {query: { userID }});
+
+  const { data: vehicles } = useFetch('/api/vehicles', { query: { userID } });
 
   function onPostClick() {
     fetchWithJSONBody('/api/vehicles', 'POST', {
-        vehicleID: 'f2691f3f-4987-41c1-935c-fc5d7d326d3e',
-        name: 'My vehicle',
-        consumption: 3.12,
-        electric: false,
+      vehicleID: '51e21343-8aef-4c68-b4cb-16f10019050f',
+      name: 'My vehicle',
+      consumption: 3.12,
+      electric: false,
     });
   }
   function onPatchClick() {
-    const vehicleID = 'f2691f3f-4987-41c1-935c-fc5d7d326d3e';
+    const vehicleID = '51e21343-8aef-4c68-b4cb-16f10019050f';
     fetchWithJSONBody('/api/vehicles?' + new URLSearchParams({vehicleID}).toString(), 'PATCH', {
-        name: 'My updated vehicle',
+      name: 'My updated vehicle',
     });
+  }
+  function onDeleteClick() {
+    const vehicleID = '51e21343-8aef-4c68-b4cb-16f10019050f';
+    fetch('/api/vehicles?' + new URLSearchParams({vehicleID}).toString(), {method: 'DELETE'});
   }
 </script>
 

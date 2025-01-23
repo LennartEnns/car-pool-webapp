@@ -1,11 +1,12 @@
 import { z } from 'zod';
 import { uuidSchema } from './valueSchemas';
+import { vehicleLimits } from '~/limits';
 
 const baseVehicleSchema = z.object({
     vehicleID: uuidSchema,
-    name: z.string().max(40),
-    model: z.string().max(40),
-    description: z.string().max(255),
+    name: z.string().max(vehicleLimits.name),
+    model: z.string().max(vehicleLimits.model),
+    description: z.string().max(vehicleLimits.description),
     consumption: z.number().nonnegative().step(0.01),
     electric: z.boolean(),
 });

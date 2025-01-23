@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     jwtPrivateKey: '-----BEGIN EC PRIVATE KEY-----\n' + process.env.JWT_PRIVATE_KEY + '\n-----END EC PRIVATE KEY-----\n',
     jwtPublicKey: '-----BEGIN PUBLIC KEY-----\n' + process.env.JWT_PUBLIC_KEY + '\n-----END PUBLIC KEY-----\n',
     jwtExpirationTime: process.env.JWT_EXPIRATION_TIME,
+    registrationKey: process.env.REGISTRATION_KEY,
   },
 
   // Vuetify configuration

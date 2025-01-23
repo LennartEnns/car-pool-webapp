@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "node ./server/db/scripts/migrateAndSeed.js && NODE_ENV=development JWT_PRIVATE_KEY=MIHcAgEBBEIAXKgaCxrAc0CzikikbNlP+W7510PS6CEqrFvEmK9amkG3rcKsGgWIRET9t6XpSSwhz4umFs2Ld3ojZxph4hFz4/ugBwYFK4EEACOhgYkDgYYABADatsU8dTRK2ODyVke3SGB7tcKWCm7UmhdfPjhCSMjJ2Ga8Z6PtHCZw1lV6EOmiSwLdMgmySh6eG2Q/SXevXOAxBgA28u4JrfA0u/MKWuoZvQcGCViMH+Cx2MJHt7WWj/ADdHA/1aKNu3KuShtcP0wijSwiXfVt5GeoNSveCWCiw3EAQQ== JWT_PUBLIC_KEY=MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQA2rbFPHU0Stjg8lZHt0hge7XClgpu1JoXXz44QkjIydhmvGej7RwmcNZVehDpoksC3TIJskoenhtkP0l3r1zgMQYANvLuCa3wNLvzClrqGb0HBglYjB/gsdjCR7e1lo/wA3RwP9WijbtyrkobXD9MIo0sIl31beRnqDUr3glgosNxAEE= JWT_EXPIRATION_TIME=3600000 SECURE_COOKIES=false nuxt dev",
+    "dev": "node ./server/db/scripts/migrateAndSeed.js && NODE_ENV=development JWT_PRIVATE_KEY=MIHcAgEBBEIAXKgaCxrAc0CzikikbNlP+W7510PS6CEqrFvEmK9amkG3rcKsGgWIRET9t6XpSSwhz4umFs2Ld3ojZxph4hFz4/ugBwYFK4EEACOhgYkDgYYABADatsU8dTRK2ODyVke3SGB7tcKWCm7UmhdfPjhCSMjJ2Ga8Z6PtHCZw1lV6EOmiSwLdMgmySh6eG2Q/SXevXOAxBgA28u4JrfA0u/MKWuoZvQcGCViMH+Cx2MJHt7WWj/ADdHA/1aKNu3KuShtcP0wijSwiXfVt5GeoNSveCWCiw3EAQQ== JWT_PUBLIC_KEY=MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQA2rbFPHU0Stjg8lZHt0hge7XClgpu1JoXXz44QkjIydhmvGej7RwmcNZVehDpoksC3TIJskoenhtkP0l3r1zgMQYANvLuCa3wNLvzClrqGb0HBglYjB/gsdjCR7e1lo/wA3RwP9WijbtyrkobXD9MIo0sIl31beRnqDUr3glgosNxAEE= JWT_EXPIRATION_TIME=3600000 SECURE_COOKIES=false REGISTRATION_KEY=s nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -26,6 +26,6 @@
     "csv-parser": "^3.1.0",
     "sqlite3": "^5.1.7",
     "vite-plugin-vuetify": "^2.0.4",
-    "vuetify": "^3.7.6"
+    "vuetify": "^3.7.7"
   }
 }

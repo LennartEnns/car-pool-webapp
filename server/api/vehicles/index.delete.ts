@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     await knex('vehicle')
       .where({
         userID: event.context.user?.userID,
-        vehicleID: query.data.vehicleID
+        vehicleID: query.data.vehicleID,
       })
       .del();
   } catch (err) {

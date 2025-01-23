@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const expiryDate = getJwtExpiryDate(jwtCookie?.value);
     const jwtTokenInvalid = jwtCookie == null || jwtCookie.value == null || (!!expiryDate && expiryDate < new Date());
 
-    if (to.path !== '/login' && jwtTokenInvalid) {
+    if (to.path !== '/login' && to.path !== '/signup' && jwtTokenInvalid) {
         return navigateTo('/login');
     }
 

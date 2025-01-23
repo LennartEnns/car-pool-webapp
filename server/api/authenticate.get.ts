@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import signJwtToken from "../myUtils/signJwtToken";
 
 export default defineEventHandler(async (event) => {
   console.log('API handler called: authenticate.get');
@@ -9,10 +9,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const { userID, username, name } = user;
-  const runtimeConfig = useRuntimeConfig(event);
-  const privateKey = runtimeConfig.jwtPrivateKey as string;
-  const expirationTime = runtimeConfig.jwtExpirationTime as string;
 
-  const token = jwt.sign({ userID, username, name }, privateKey, { algorithm: 'ES512', expiresIn: expirationTime });
+  const token = signJwtToken({ userID, username, name });
   return { token };
 })

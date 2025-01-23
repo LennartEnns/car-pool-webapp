@@ -1,4 +1,4 @@
-userID;username;name;pwHash
+userID;username;realName;pwHash
 2cac8c5e-85b4-4522-b543-fd17e401fe3f;alice;Alice;$2a$10$WElUz.423xdaVVZownJi4.zyB5Hm0lalfArvXGeJ3JZsVWMl.FBpa
 0b3b78f4-fa26-4498-ad64-e5af7568b2d5;bob;Bob;$2a$10$WElUz.423xdaVVZownJi4.zyB5Hm0lalfArvXGeJ3JZsVWMl.FBpa
 fdbb5e03-7276-4f22-b37a-964efbd7e209;charlie;Charlie;$2a$10$WElUz.423xdaVVZownJi4.zyB5Hm0lalfArvXGeJ3JZsVWMl.FBpa

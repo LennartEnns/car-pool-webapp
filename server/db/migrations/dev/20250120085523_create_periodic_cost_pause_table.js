@@ -4,10 +4,10 @@
  */
 export function up(knex) {
     return knex.schema.createTable('PeriodicCostPause', (table) => {
-        table.uuid('additionalCostID').notNullable();
+        table.uuid('costFactorID').notNullable();
         table.date('pauseUntil').notNullable();
 
-        table.foreign('additionalCostID').references('additionalCostID').inTable('additionalCost').onDelete('CASCADE');
+        table.foreign('costFactorID').references('costFactorID').inTable('costFactor').onDelete('CASCADE');
     });
 }
 

@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { uuidSchema } from "./valueSchemas";
-import { userLimits } from '~/limits';
+import { userLimits } from '~/commonLimits';
 
 export const vehicleIdQuerySchema = z.object({
     vehicleID: uuidSchema,

@@ -8,3 +8,10 @@ export const vehicleLimits = {
     model: 40,
     description: 255,
 }
+
+export const routeLimits = {
+    name: 50,
+    description: 255,
+    location1: 60,
+    location2: 60,
+}

@@ -16,9 +16,9 @@ export async function seed(knex) {
     rides: 'ride',
     userToRide: 'userToRide',
     userToRoute: 'userToRoute',
-    additionalCosts: 'additionalCost',
-    additionalCostToRide: 'additionalCostToRide',
-    additionalCostInflictions: 'additionalCostInfliction',
+    costFactors: 'costFactor',
+    costFactorToRide: 'costFactorToRide',
+    costInflictions: 'costInfliction',
     periodicCostPauses: 'periodicCostPause',
   };
   

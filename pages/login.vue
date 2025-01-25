@@ -7,7 +7,7 @@
             <v-divider class="mx-3"/>
             <v-card-text>
                 <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
-                    <v-text-field v-model="username" label="Username" type="text" :rules="[rules.required]"></v-text-field>
+                    <v-text-field v-model="username" label="Username" type="text" :rules="[rules.requiredNotBlank]"></v-text-field>
                     <v-text-field v-model="password" label="Password" type="password" :rules="[rules.required]"></v-text-field>
                     <div class="d-flex align-center">
                         <v-btn type="submit" color="success" :loading="loading">
@@ -38,6 +38,7 @@
     const errorText = ref('');
     const rules = {
         required: value => !!value || 'Value required',
+        requiredNotBlank: value => (!!value && value.trim().length > 0) || 'Value required',
     };
 
     const runtimeConfig = useRuntimeConfig();
@@ -66,7 +67,7 @@
 
         // Set headers for POST request
         const headers = {
-            'Authorization': encodeBasicAuth(username.value, password.value),
+            'Authorization': encodeBasicAuth(username.value.trim(), password.value),
         };
 
         // Fetch JWT token from API

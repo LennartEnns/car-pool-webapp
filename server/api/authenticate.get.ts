@@ -1,4 +1,4 @@
-import signJwtToken from "../myUtils/signJwtToken";
+import signJwtToken from "../serverUtils/signJwtToken";
 
 export default defineEventHandler(async (event) => {
   console.log('API handler called: authenticate.get');

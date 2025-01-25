@@ -1,4 +1,4 @@
-import decodeBasicAuth from "../myUtils/decodeBasicAuth";
+import decodeBasicAuth from "../serverUtils/decodeBasicAuth";
 import bcrypt from "bcrypt";
 import knex from '~/server/db/knex';
 import { error401 } from "../errors";

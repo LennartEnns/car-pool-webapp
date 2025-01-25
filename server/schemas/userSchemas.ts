@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userLimits } from "~/limits";
+import { userLimits } from "~/commonLimits";
 
 const baseUserSchema = z.object({
     userID: z.string().uuid(),

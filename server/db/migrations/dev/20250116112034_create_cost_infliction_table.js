@@ -3,17 +3,17 @@
  * @returns { Promise<void> }
  */
 export function up(knex) {
-    return knex.schema.createTable('AdditionalCostInfliction', (table) => {
-        table.uuid('additionalCostInflictionID').primary().defaultTo(knex.fn.uuid());
+    return knex.schema.createTable('CostInfliction', (table) => {
+        table.uuid('costInflictionID').primary().defaultTo(knex.fn.uuid());
         table.uuid('userID').notNullable();
-        table.uuid('additionalCostID').notNullable();
+        table.uuid('costFactorID').notNullable();
         table.uuid('rideID').nullable();
-        // table.decimal('derivedAmount', 10, 2).notNullable();
+        table.decimal('derivedAmount', 10, 2).notNullable();
         table.boolean('paid').notNullable().defaultTo(false);
         table.dateTime('inflictionDatetime').notNullable().defaultTo(knex.fn.now());
     
         table.foreign('userID').references('userID').inTable('User').onDelete('CASCADE');
-        table.foreign('additionalCostID').references('additionalCostID').inTable('AdditionalCost').onDelete('CASCADE');
+        table.foreign('costFactorID').references('costFactorID').inTable('CostFactor').onDelete('CASCADE');
         table.foreign('rideID').references('rideID').inTable('Ride').onDelete('CASCADE');
     });
 }
@@ -23,5 +23,5 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-    return knex.schema.dropTableIfExists('AdditionalCostInfliction');
+    return knex.schema.dropTableIfExists('CostInfliction');
 }

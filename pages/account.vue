@@ -1,10 +1,10 @@
 <template>
   <NuxtLayout name="after-login">
     
-	</NuxtLayout>
+  </NuxtLayout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 </script>
 

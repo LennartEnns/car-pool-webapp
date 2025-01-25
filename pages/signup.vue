@@ -8,8 +8,8 @@
             <v-card-text>
                 <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
                     <v-text-field v-model="regKey" label="Registration Key" type="password" :rules="[rules.required]"></v-text-field>
-                    <v-text-field v-model="username" label="Username" type="text" :rules="[rules.required]"></v-text-field>
-                    <v-text-field v-model="realName" label="Real name (optional)" type="text"></v-text-field>
+                    <v-text-field v-model="username" label="Username" type="text" :rules="[rules.requiredNotBlank, rules.validUsername]" :maxlength="userLimits.username"></v-text-field>
+                    <v-text-field v-model="realName" label="Real name (optional)" type="text" :rules="[rules.validRealName]" :maxlength="userLimits.realName"></v-text-field>
                     <v-text-field v-model="password" label="Password" type="password" :rules="[rules.required]"></v-text-field>
                     <v-text-field v-model="confirmPassword" label="Confirm password" type="password" :rules="[rules.required, rules.matchPassword]"></v-text-field>
                     <v-btn type="submit" color="success" :loading="loading">
@@ -27,6 +27,9 @@
 </template>
 
 <script setup>
+    import { validateUsername, validateRealNameBeforeTitleCase } from '~/commonRules';
+    import { userLimits } from '~/commonLimits';
+
     const formValid = ref(false);
 
     const regKey = ref('');
@@ -40,7 +43,10 @@
     const errorText = ref('');
     const rules = {
         required: value => !!value || 'Value required',
+        requiredNotBlank: value => (!!value && value.trim().length > 0) || 'Value required',
         matchPassword: value => value === password.value || 'Passwords don\'t match',
+        validUsername: value => validateUsername(value) || 'Must use a letter followed by letters/numbers/underscores',
+        validRealName: value => (!value || validateRealNameBeforeTitleCase(value)) || 'Must use letters separated by spaces/hyphens',
     };
 
     const runtimeConfig = useRuntimeConfig();

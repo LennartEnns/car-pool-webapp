@@ -12,13 +12,14 @@ export default defineEventHandler(async (event) => {
     throw createError({statusCode: 401, message: 'Unauthorized'});
   }
 
-  try {
-    const vehicles = await knex('vehicle')
-      .select('vehicleID', 'name', 'model', 'description', 'consumption', 'electric')
-      .where({ userID: query.data.userID });
-    return { vehicles };
-  } catch (err) {
-    console.error(`Error in /api/vehicle GET: ${err}`);
-    throw createError(error500);
-  }
+  return await knex('vehicle')
+    .select('vehicleID', 'name', 'model', 'description', 'consumption', 'electric')
+    .where({ userID: query.data.userID })
+    .catch(err => {
+      console.error(`Error in /api/vehicle GET: ${err}`);
+      throw createError(error500);
+    })
+    .then(vehicles => {
+      return vehicles;
+    });
 })

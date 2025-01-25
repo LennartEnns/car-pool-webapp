@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import { uuidSchema } from './valueSchemas';
-import { vehicleLimits } from '~/limits';
+import { vehicleLimits } from '~/commonLimits';
 
 const baseVehicleSchema = z.object({
     vehicleID: uuidSchema,
+    userID: uuidSchema,
     name: z.string().max(vehicleLimits.name),
     model: z.string().max(vehicleLimits.model),
     description: z.string().max(vehicleLimits.description),
@@ -12,13 +13,18 @@ const baseVehicleSchema = z.object({
 });
 
 export const createVehicleSchema = baseVehicleSchema
-    .partial({ // model and description have default values in the database
+    .partial({ // Have default values or are nullable
+        vehicleID: true,
         model: true,
         description: true,
+    })
+    .omit({
+        userID: true, // userID will be taken from event context
     });
 
 export const updateVehicleSchema = baseVehicleSchema
     .partial() // Make everything optional
-    .omit({ // vehicleID will be passed as query parameter
-        vehicleID: true,
+    .omit({
+        vehicleID: true, // vehicleID will be passed as query parameter
+        userID: true, // userID will be taken from event context
     });

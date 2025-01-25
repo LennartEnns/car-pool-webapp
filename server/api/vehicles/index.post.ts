@@ -1,4 +1,4 @@
-import { createVehicleSchema } from '~/server/schemas/vehicleSchema';
+import { createVehicleSchema } from '~/server/schemas/vehicleSchemas';
 import knex from '~/server/db/knex';
 import { error400, error500 } from '~/server/errors';
 
@@ -9,12 +9,14 @@ export default defineEventHandler(async (event) => {
   if (!result.success) throw createError(error400);
   
   const vehicleData = { ...result.data, userID: event.context.user?.userID };
-  try {
-    await knex('vehicle').insert(vehicleData);
-  } catch (err) {
-    console.error(`Error in /api/vehicle POST: ${err}`);
-    throw createError(error500);
-  }
-  
-  return new Response(null, { status: 200 });
+
+  return await knex('vehicle').insert(vehicleData, ['vehicleID'])
+    .catch(err => {
+      console.error(`Error in /api/vehicle POST: ${err}`);
+      throw createError(error500);
+    })
+    .then(datasets => {
+      if (!datasets || datasets.length === 0) throw createError(error500);
+      return { vehicleID: datasets[0].vehicleID };
+    });
 })

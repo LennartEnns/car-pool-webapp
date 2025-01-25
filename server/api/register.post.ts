@@ -1,18 +1,48 @@
 import knex from '~/server/db/knex';
-import signJwtToken from "../myUtils/signJwtToken";
-import { error500 } from "../errors";
+import signJwtToken from "../serverUtils/signJwtToken";
+import { error400, error409, error500 } from "../errors";
+import { validateUsername, validateRealNameBeforeTitleCase } from '~/commonRules';
 import bcrypt from 'bcrypt';
+import toTitleCase from '~/utils/toTitleCase';
+import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 
 export default defineEventHandler(async (event) => {
   console.log('API handler called: register.post');
 
   const { username, password, realName } = event.context.user;
+
+  // Username normalization + validation
+  const normalizedUsername = username.trim();
+  if (normalizedUsername.length === 0 || !validateUsername(normalizedUsername)) throw createError(error400);
+
+  // Real name normalization + validation
+  let normalizedRealName = realName;
+  if (!!realName) {
+    const trimmedRealName = realName.trim();
+    if (!validateRealNameBeforeTitleCase(trimmedRealName)) throw createError(error400);
+    normalizedRealName = toTitleCase(trimmedRealName);
+  }
+
+  // Check if the username is taken
+  await knex('user').select().where({username: normalizedUsername})
+  .catch(err => {
+    throw createError(error500);
+  })
+  .then(users => {
+    if (users.length > 0) throw createError(error409); // Conflict: User already exists
+  });
+
   const pwHash = await bcrypt.hash(password, 10);
+  const insertObj = removeUndefinedEntries({username: normalizedUsername, realName: normalizedRealName, pwHash});
+  return await knex('user').insert(insertObj, ['userID'])
+  .catch(err => {
+    throw createError(error500);
+  })
+  .then(datasets => {
+    if (!datasets || datasets.length === 0) throw createError(error500);
 
-  const userIDs = await knex('user').insert({username, realName: realName || '', pwHash}, ['userID']);
-  if (userIDs.length === 0) throw createError(error500);
-
-  const token = signJwtToken({ userID: userIDs[0].userID, username, realName });
-  return { token };
+    const jwtPayloadObj = removeUndefinedEntries({ userID: datasets[0].userID, username: normalizedUsername, name: normalizedRealName });
+    const token = signJwtToken(jwtPayloadObj);
+    return { token };
+  });
 })
-

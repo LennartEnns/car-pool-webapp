@@ -3,8 +3,8 @@
  * @returns { Promise<void> }
  */
 export function up(knex) {
-    return knex.schema.createTable('AdditionalCost', (table) => {
-        table.uuid('additionalCostID').primary().defaultTo(knex.fn.uuid());
+    return knex.schema.createTable('CostFactor', (table) => {
+        table.uuid('costFactorID').primary().defaultTo(knex.fn.uuid());
         table.uuid('routeID').nullable();
         table.string('name', 40).notNullable().defaultTo('').comment('e.g., "Parking"');
         table.string('period', 1).notNullable().comment('e.g., "m" for monthly, "r" for ride, "k" for kilometers');
@@ -21,5 +21,5 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-    return knex.schema.dropTableIfExists('AdditionalCost');
+    return knex.schema.dropTableIfExists('CostFactor');
 }

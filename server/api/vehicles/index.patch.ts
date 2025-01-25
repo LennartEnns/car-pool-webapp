@@ -1,6 +1,6 @@
 import knex from '~/server/db/knex';
-import { error400, error500 } from '~/server/errors';
-import { updateVehicleSchema } from '~/server/schemas/vehicleSchema';
+import { error400, error404, error500 } from '~/server/errors';
+import { updateVehicleSchema } from '~/server/schemas/vehicleSchemas';
 import { vehicleIdQuerySchema } from '~/server/schemas/querySchemas';
 
 export default defineEventHandler(async (event) => {
@@ -10,19 +10,21 @@ export default defineEventHandler(async (event) => {
   if (!query.success) throw createError(error400);
 
   const result = await readValidatedBody(event, body => updateVehicleSchema.safeParse(body))
-  if (!result.success) {
-    throw createError(error400);
-  }
+  if (!result.success) throw createError(error400);
   
-  try {
-    await knex('vehicle').where({
+  await knex('vehicle')
+    .where({
       userID: event.context.user?.userID,
       vehicleID: query.data.vehicleID,
-    }).update(result.data);
-  } catch (err) {
-    console.error(`Error in /api/vehicle PATCH: ${err}`);
-    throw createError(error500);
-  }
+    })
+    .update(result.data)
+    .catch(err => {
+      console.error(`Error in /api/vehicle DELETE: ${err}`);
+      throw createError(error500);
+    })
+    .then(deletedRows => {
+      if (deletedRows === 0) throw createError(error404);
+    });
   
   return new Response(null, { status: 200 });
 })

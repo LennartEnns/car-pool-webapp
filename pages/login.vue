@@ -7,7 +7,7 @@
             <v-divider class="mx-3"/>
             <v-card-text>
                 <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
-                    <v-text-field v-model="username" label="Username" type="text" :rules="[rules.requiredNotBlank]"></v-text-field>
+                    <v-text-field v-model="username" label="Username" type="text" :rules="[rules.requiredNotBlank, rules.validUsername]" :maxLength="userLimits.username"></v-text-field>
                     <v-text-field v-model="password" label="Password" type="password" :rules="[rules.required]"></v-text-field>
                     <div class="d-flex align-center">
                         <v-btn type="submit" color="success" :loading="loading">
@@ -30,6 +30,9 @@
 </template>
 
 <script setup>
+    import { validateUsername } from '~/commonRules';
+    import { userLimits } from '~/commonLimits';
+
     const formValid = ref(false);
     const username = ref('');
     const password = ref('');
@@ -39,6 +42,7 @@
     const rules = {
         required: value => !!value || 'Value required',
         requiredNotBlank: value => (!!value && value.trim().length > 0) || 'Value required',
+        validUsername: value => validateUsername(value) || 'Must use a letter followed by letters/numbers/underscores',
     };
 
     const runtimeConfig = useRuntimeConfig();

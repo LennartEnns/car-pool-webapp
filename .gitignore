@@ -25,4 +25,4 @@ logs
 
 # Others
 *.code-workspace
-**/*.sqlite3
+*.sqlite3

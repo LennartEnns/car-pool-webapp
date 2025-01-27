@@ -1,11 +1,12 @@
 import { error400, error401 } from '../errors';
-import { registrationBodySchema } from '../schemas/userSchemas';
+import { registrationBodySchema } from '../schemas/requestBody/userBodySchemas';
 
 /**
- * Middleware to check if the registration key is valid.
+ * Middleware to check if the registration key and body are valid.
  */
 export default defineEventHandler(async (event) => {
-  if (!event.path.startsWith('/api/register')) return; // Only apply to registration route
+  // Only apply to user registration route
+  if (!(event.path.startsWith('/api/users') && event.method === 'POST')) return;
 
   console.log('Using middleware: registration.ts');
 

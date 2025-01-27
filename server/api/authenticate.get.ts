@@ -8,8 +8,9 @@ export default defineEventHandler(async (event) => {
     throw createError({statusCode: 401, message: 'Unauthorized'});
   }
 
-  const { userID, username, name } = user;
+  const { userID, username, realName } = user;
 
-  const token = signJwtToken({ userID, username, name });
-  return { token };
+  const userResObj = { userID, username, realName };
+  const token = signJwtToken({ userID });
+  return { token, user: userResObj };
 })

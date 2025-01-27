@@ -1,7 +1,7 @@
 import knex from '~/server/db/knex';
 import { error400, error404, error500 } from '~/server/errors';
-import { updateVehicleSchema } from '~/server/schemas/vehicleSchemas';
-import { vehicleIdQuerySchema } from '~/server/schemas/querySchemas';
+import { updateVehicleSchema } from '~/server/schemas/requestBody/vehicleBodySchemas';
+import { vehicleIdQuerySchema } from '~/server/schemas/query/vehicleQuerySchemas';
 
 export default defineEventHandler(async (event) => {
   console.log('/api/vehicle PATCH called');
@@ -19,11 +19,11 @@ export default defineEventHandler(async (event) => {
     })
     .update(result.data)
     .catch(err => {
-      console.error(`Error in /api/vehicle DELETE: ${err}`);
+      console.error(`Error in /api/vehicle PATCH: ${err}`);
       throw createError(error500);
     })
-    .then(deletedRows => {
-      if (deletedRows === 0) throw createError(error404);
+    .then(updatedRows => {
+      if (updatedRows === 0) throw createError(error404);
     });
   
   return new Response(null, { status: 200 });

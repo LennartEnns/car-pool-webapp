@@ -1,6 +1,6 @@
 import knex from '~/server/db/knex';
 import { error400, error404, error500 } from '~/server/errors';
-import { vehicleIdQuerySchema } from '~/server/schemas/querySchemas';
+import { vehicleIdQuerySchema } from '~/server/schemas/query/vehicleQuerySchemas';
 
 export default defineEventHandler(async (event) => {
   console.log('/api/vehicle DELETE called');

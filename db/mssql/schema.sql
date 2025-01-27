@@ -7,14 +7,14 @@ CREATE TABLE User (
     userID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     username NVARCHAR(50) UNIQUE NOT NULL,
     pwHash VARCHAR(60) NOT NULL,
-    realName NVARCHAR(50) NOT NULL DEFAULT ''
+    realName NVARCHAR(50) NULL
 );
 
 CREATE TABLE Vehicle (
     vehicleID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     userID UNIQUEIDENTIFIER NOT NULL,
     name NVARCHAR(40) NOT NULL,
-    model NVARCHAR(40) NOT NULL DEFAULT '',
+    model NVARCHAR(40) NULL,
     description NVARCHAR(255) NOT NULL DEFAULT '',
     consumption DECIMAL(10, 2) NOT NULL, -- e.g., fuel consumption in liters/100km or kWh/100km
     electric BIT NOT NULL,               -- boolean: 1 for electric, 0 for non-electric
@@ -79,7 +79,8 @@ CREATE TABLE CostFactor (
 
     period NCHAR(1) NOT NULL, -- e.g., 'm' for monthly, 'r' for every ride, 'k' for every km, 'l' for every liter/kWh (fuel cost)
     periodMultiplier SMALLINT NOT NULL DEFAULT 1, -- e.g., 'k' and 100 for 'every 100 km'
-    inflictionMode CHAR(1) NOT NULL, -- e.g., 'p' for 'distribute by ride participation', 'r' for 'distribute over route participants', 'e' for 'inflict on every user'
+    inflictionMode CHAR(1) NOT NULL, -- 'p' for 'inflict by ride participation', 'a' for 'inflict on all route participants'
+    distributionMode CHAR(1) NOT NULL, -- 's' for 'split', f for 'inflict full amount on everyone'
 
     amount DECIMAL(10, 2) NOT NULL,      -- Cost amount
     FOREIGN KEY (routeID) REFERENCES Route(routeID) ON DELETE CASCADE
@@ -94,12 +95,12 @@ CREATE TABLE CostFactorToRide (
     FOREIGN KEY (rideID) REFERENCES Ride(rideID) ON DELETE CASCADE
 );
 
--- TODO: Automatic initial calculation of derivedAmount
+-- TODO: Automatic calculation of derivedAmount on creation
 CREATE TABLE CostInfliction (
     costInflictionID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     userID UNIQUEIDENTIFIER NOT NULL,
     costFactorID UNIQUEIDENTIFIER NOT NULL,
-    rideID UNIQUEIDENTIFIER NULL, -- ID of the ride a per-ride cost was inflicted for (NULL if CostFactor.period is not 'r' or 'k')
+    rideID UNIQUEIDENTIFIER NULL, -- ID of the ride a cost was inflicted for (NULL if CostFactor.period is not 'r', 'k' or 'l')
     derivedAmount DECIMAL(10, 2) NOT NULL, -- Final cost amount for the user
     paid BIT NOT NULL DEFAULT 0, -- Whether the infliction has been paid by the user
     inflictionDatetime DATETIME NOT NULL DEFAULT GETDATE(), -- Datetime of infliction with current datetime as default

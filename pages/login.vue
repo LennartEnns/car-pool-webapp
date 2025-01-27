@@ -61,11 +61,6 @@
         }
     }
 
-    async function saveJwtCookie(jwtToken) {
-        // Save JWT token in cookie
-        jwtCookie.value = jwtToken
-    }
-
     async function requestLogin() {
         loading.value = true;
 
@@ -81,7 +76,12 @@
         })
         .then((response) => {
             // Save JWT token in cookie
-            saveJwtCookie(response.token);
+            jwtCookie.value = response.token;
+            
+            // Save user object in local storage
+            if (import.meta.client) {
+                localStorage.setItem('user', response.user);
+            }
 
             // Navigate to homepage
             navigateTo('/home');

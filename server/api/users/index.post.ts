@@ -1,13 +1,13 @@
 import knex from '~/server/db/knex';
-import signJwtToken from "../serverUtils/signJwtToken";
-import { error400, error409, error500 } from "../errors";
+import signJwtToken from '~/server/serverUtils/signJwtToken';
+import { error400, error409, error500 } from '~/server/errors';
 import { validateUsername, validateRealNameBeforeTitleCase } from '~/commonRules';
 import bcrypt from 'bcrypt';
 import toTitleCase from '~/utils/toTitleCase';
 import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 
 export default defineEventHandler(async (event) => {
-  console.log('API handler called: register.post');
+  console.log('/api/users POST called');
 
   const { username, password, realName } = event.context.user;
 
@@ -24,12 +24,12 @@ export default defineEventHandler(async (event) => {
   }
 
   // Check if the username is taken
-  await knex('user').select().where({username: normalizedUsername})
+  await knex('user').first().where({username: normalizedUsername})
   .catch(err => {
     throw createError(error500);
   })
-  .then(users => {
-    if (users.length > 0) throw createError(error409); // Conflict: User already exists
+  .then(user => {
+    if (!!user) throw createError(error409); // Conflict: User already exists
   });
 
   const pwHash = await bcrypt.hash(password, 10);
@@ -40,9 +40,10 @@ export default defineEventHandler(async (event) => {
   })
   .then(datasets => {
     if (!datasets || datasets.length === 0) throw createError(error500);
+    const userID = datasets[0].userID;
 
-    const jwtPayloadObj = removeUndefinedEntries({ userID: datasets[0].userID, username: normalizedUsername, name: normalizedRealName });
-    const token = signJwtToken(jwtPayloadObj);
-    return { token };
+    const user = removeUndefinedEntries({ userID, username: normalizedUsername, name: normalizedRealName });
+    const token = signJwtToken({userID});
+    return { token, user };
   });
 })

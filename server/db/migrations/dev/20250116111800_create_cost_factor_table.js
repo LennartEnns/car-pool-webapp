@@ -9,7 +9,8 @@ export function up(knex) {
         table.string('name', 40).notNullable().defaultTo('').comment('e.g., "Parking"');
         table.string('period', 1).notNullable().comment('e.g., "m" for monthly, "r" for ride, "k" for kilometers');
         table.smallint('periodMultiplier').notNullable().defaultTo(1);
-        table.string('inflictionMode', 1).notNullable().comment('e.g., "d" for "distribute equally", "e" for "inflict on every user"');
+        table.string('inflictionMode', 1).notNullable();
+        table.string('distributionMode', 1).notNullable();
         table.decimal('amount', 10, 2).notNullable();
     
         table.foreign('routeID').references('routeID').inTable('Route').onDelete('CASCADE');

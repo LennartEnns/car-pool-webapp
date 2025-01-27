@@ -1,3 +1,3 @@
-costFactorID;routeID;name;period;periodMultiplier;inflictionMode;amount
-8214e513-f2a1-427e-b12d-afcab5e4d6de;cc0b91c2-c273-40bb-8066-103377908fbb;Parking;r;1;p;3
-73ad10c8-7765-456f-ab0e-c128cf95bd81;cc0b91c2-c273-40bb-8066-103377908fbb;Fuel;k;100;p;1.60
+costFactorID;routeID;name;period;periodMultiplier;inflictionMode;distributionMode;amount
+8214e513-f2a1-427e-b12d-afcab5e4d6de;cc0b91c2-c273-40bb-8066-103377908fbb;Parking;r;1;p;s;3
+73ad10c8-7765-456f-ab0e-c128cf95bd81;cc0b91c2-c273-40bb-8066-103377908fbb;Fuel;k;100;p;s;1.60

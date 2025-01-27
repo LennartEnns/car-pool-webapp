@@ -65,11 +65,6 @@
         }
     }
 
-    async function saveJwtCookie(jwtToken) {
-        // Save JWT token in cookie
-        jwtCookie.value = jwtToken
-    }
-
     async function requestSignup() {
         loading.value = true;
 
@@ -79,18 +74,23 @@
         };
 
         // Fetch JWT token from API
-        $fetch('/api/register', {
+        $fetch('/api/users', {
             method: 'post',
             headers,
-            body: {
+            body: removeUndefinedEntries({
                 username: username.value,
-                realName: realName.value,
+                realName: (!!realName.value ? (realName.value.length > 0 ? realName.value : undefined) : undefined),
                 password: password.value,
-            }
+            })
         })
         .then((response) => {
             // Save JWT token in cookie
-            saveJwtCookie(response.token);
+            jwtCookie.value = response.token;
+            
+            // Save user object in local storage
+            if (import.meta.client) {
+                localStorage.setItem('user', response.user);
+            }
 
             // Navigate to homepage
             navigateTo('/home');

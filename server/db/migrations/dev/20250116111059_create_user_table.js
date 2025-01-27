@@ -8,7 +8,7 @@ export function up(knex) {
     return knex.schema.createTable('User', (table) => {
         table.uuid('userID').primary().defaultTo(knex.fn.uuid());
         table.string('username', 50).unique().notNullable;
-        table.string('realName', 50).notNullable().defaultTo('');
+        table.string('realName', 50).nullable();
         table.string('pwHash', 60).notNullable();
     });
 }

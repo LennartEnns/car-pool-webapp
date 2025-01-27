@@ -1,6 +1,7 @@
-import { createVehicleSchema } from '~/server/schemas/vehicleSchemas';
+import { createVehicleSchema } from '~/server/schemas/requestBody/vehicleBodySchemas';
 import knex from '~/server/db/knex';
 import { error400, error500 } from '~/server/errors';
+import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 
 export default defineEventHandler(async (event) => {
   console.log('/api/vehicle POST called');
@@ -10,7 +11,7 @@ export default defineEventHandler(async (event) => {
   
   const vehicleData = { ...result.data, userID: event.context.user?.userID };
 
-  return await knex('vehicle').insert(vehicleData, ['vehicleID'])
+  return await knex('vehicle').insert(removeUndefinedEntries(vehicleData), ['vehicleID'])
     .catch(err => {
       console.error(`Error in /api/vehicle POST: ${err}`);
       throw createError(error500);

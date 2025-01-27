@@ -1,26 +1,23 @@
+import { useCookie } from 'nuxt/app';
 import knex from '~/server/db/knex';
 import { error400, error404, error500 } from '~/server/errors';
-import { routeIdQuerySchema } from '~/server/schemas/query/routeQuerySchemas';
 
 export default defineEventHandler(async (event) => {
-  console.log('/api/route DELETE called');
-
-  const query = await getValidatedQuery(event, data => routeIdQuerySchema.safeParse(data));
-  if (!query.success) throw createError(error400);
-
-  await knex('vehicle')
+  console.log('/api/users DELETE called');
+  
+  await knex('users')
     .where({
       userID: event.context.user?.userID,
-      routeID: query.data.routeID,
     })
     .del()
     .catch(err => {
-      console.error(`Error in /api/route DELETE: ${err}`);
+      console.error(`Error in /api/users DELETE: ${err}`);
       throw createError(error500);
     })
     .then(deletedRows => {
       if (deletedRows === 0) throw createError(error404);
     });
 
+  useCookie('jwt').value = null;
   return new Response(null, { status: 200 });
 })

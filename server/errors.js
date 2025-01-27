@@ -8,6 +8,11 @@ export const error401 = {
     statusMessage: 'Unauthorized',
 }
 
+export const error403 = {
+    statusCode: 403,
+    statusMessage: 'Forbidden',
+}
+
 export const error404 = {
     statusCode: 404,
     statusMessage: 'Resource not found',

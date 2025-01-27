@@ -1,19 +1,25 @@
 <template>
   <NuxtLayout name="after-login">
-    <p>Hello, {{ username }} a.k.a. {{ userID }}! Your real name is {{ realName || 'unknown' }}!</p>
-    <p class=""></p>
+    <p>Hello, {{ user.username }} a.k.a. {{ user.userID }}! Your real name is {{ user.realName || 'unknown' }}!</p>
+    <p class="font-weight-bold">Vehicles by userID:</p>
     <p>{{ vehicles }}</p>
-    <v-btn class="" @click="onPostClick()">Post</v-btn>
+    <p class="font-weight-bold">Vehicle by vehicleID:</p>
+    <p>{{ singleVehicle }}</p>
+    <v-btn @click="onPostClick()">Post</v-btn>
     <v-btn @click="onPatchClick()">Update</v-btn>
     <v-btn @click="onDeleteClick()">Delete</v-btn>
   </NuxtLayout>
 </template>
 
 <script setup>
-  const jwtCookie = useCookie('jwt');
-  const { userID, username, name: realName } = parseJwtPayload(jwtCookie.value);
+  let user = {};
+  if (import.meta.client) {
+    const userObj = localStorage.getItem('user');
+    if (!!userObj) user = userObj;
+  }
 
-  const { data: vehicles } = useFetch('/api/vehicles', { query: { userID } });
+  const { data: vehicles } = useFetch('/api/vehicles', { query: { userID: user.userID } });
+  const { data: singleVehicle } = useFetch('/api/vehicles', { query: { vehicleID: '769be576-16a4-40a9-81c8-6ce16ed72767' } });
   let newVehicleID = null;
 
   async function onPostClick() {

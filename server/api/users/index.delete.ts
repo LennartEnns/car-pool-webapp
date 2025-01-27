@@ -1,4 +1,3 @@
-import { useCookie } from 'nuxt/app';
 import knex from '~/server/db/knex';
 import { error400, error404, error500 } from '~/server/errors';
 
@@ -18,6 +17,5 @@ export default defineEventHandler(async (event) => {
       if (deletedRows === 0) throw createError(error404);
     });
 
-  useCookie('jwt').value = null;
   return new Response(null, { status: 200 });
 })

@@ -1,6 +1,6 @@
 <template>
 	<NuxtLayout name="checkin-pages">
-        <v-card class="mt-8" width="400px" max-width="90%" variant="elevated">
+        <v-card class="form-card mt-8" width="400px" max-width="90%" variant="elevated">
             <v-card-title class="text-center text-h5 font-weight-bold">
                 <span class="headline">Sign in</span>
             </v-card-title>
@@ -100,5 +100,7 @@
 </script>
 
 <style scoped>
-    
+    .form-card {
+        border: 5px solid darkcyan;
+    }
 </style>

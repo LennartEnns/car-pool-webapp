@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const { username, password } = decodeBasicAuth(authHeader); // Extract credentials
-    const user = await knex('user').first('userID', 'pwHash').where({username}); // Find the user in the database
+    const user = await knex('user').first('userID', 'pwHash').where({username: username.toLowerCase()}); // Find the user in the database
     if (!user) {
         throw createError(error401);
     }

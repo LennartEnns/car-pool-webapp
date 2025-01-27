@@ -1,14 +1,16 @@
 import userBaseSchema from "../base/userBaseSchema";
-import requireOneKey from "~/server/serverUtils/zodRequireExactlyOneKey";
+import { userLimits } from "~/commonLimits";
+import { z } from 'zod';
 
 export const userIdQuerySchema = userBaseSchema.pick({
     userID: true,
 });
 
-export const searchUserQuerySchema = requireOneKey(
-    userBaseSchema.pick({
+export const searchUserQuerySchema = userBaseSchema
+    .pick({
         username: true,
-        realName: true,
     })
-    .partial()
-);
+    .or(z.object({
+            realName: z.string().max(userLimits.realName),
+        })
+    );

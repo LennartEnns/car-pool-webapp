@@ -4,7 +4,7 @@ import { error404, error500 } from '~/server/errors';
 export default defineEventHandler(async (event) => {
   console.log('/api/users DELETE called');
   
-  await knex('users')
+  await knex('user')
     .where({
       userID: event.context.user?.userID,
     })

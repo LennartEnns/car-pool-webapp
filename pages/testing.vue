@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="after-login">
-    <v-sheet color="#333333" width="100%" height="100%">
+    <v-sheet color="#333" width="100%" height="100%">
       <p>Hello, {{ userData.user.username }} a.k.a. {{ userID }}! Your real name is {{ userData.user.realName || 'unknown' }}!</p>
       <p class="font-weight-bold">Vehicles by userID:</p>
       <p>{{ vehicles }}</p>
@@ -46,12 +46,24 @@
       body: {
         name: 'My updated vehicle',
       }
+    })
+    .catch(err => {
+      console.log(err.data);
+    })
+    .then(response => {
+      console.log(response);
     });
   }
   async function onDeleteClick() {
     await $fetch('/api/vehicles', {
       method: 'DELETE',
       query: {vehicleID: newVehicleID},
+    })
+    .catch(err => {
+      console.log(err.data);
+    })
+    .then(response => {
+      console.log(response);
     });
   }
 </script>

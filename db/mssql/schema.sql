@@ -95,7 +95,6 @@ CREATE TABLE CostFactorToRide (
     FOREIGN KEY (rideID) REFERENCES Ride(rideID) ON DELETE CASCADE
 );
 
--- TODO: Automatic calculation of derivedAmount on creation
 CREATE TABLE CostInfliction (
     costInflictionID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     userID UNIQUEIDENTIFIER NOT NULL,

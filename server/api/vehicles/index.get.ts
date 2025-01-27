@@ -22,9 +22,8 @@ export default defineEventHandler(async (event) => {
       throw createError(error500);
     })
     .then(vehicles => {
-      if (!!query.data.vehicleID) {
+      if ('vehicleID' in query.data) {
         if (vehicles.length === 0) throw createError(error404);
-        return { vehicle: vehicles[0] }
       }
       return vehicles;
     });

@@ -18,9 +18,8 @@ export default defineEventHandler(async (event) => {
       throw createError(error500);
     })
     .then(routes => {
-      if (!!query.data.routeID) {
+      if ('routeID' in query.data) {
         if (routes.length === 0) throw createError(error404);
-        return { route: routes[0] }
       }
       return routes;
     });

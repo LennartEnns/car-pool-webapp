@@ -1,6 +1,6 @@
 <template>
   <v-main width="100%" height="100%">
-		<v-sheet class="d-flex flex-column align-center justify-center" color="red-lighten-5" height="100%" width="100%">
+		<v-sheet class="d-flex flex-column align-center justify-center" color="#333" width="100%" height="100%">
 			<div class="app-title font-weight-black d-flex align-center mb-4" max-width="90%">
         <v-icon icon="mdi-car" class="mr-3"></v-icon>
         CPCD

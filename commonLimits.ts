@@ -15,3 +15,7 @@ export const routeLimits = {
     location1: 60,
     location2: 60,
 }
+
+export const rideLimits = {
+    maxGetResults: 50,
+}

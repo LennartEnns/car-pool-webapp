@@ -9,15 +9,15 @@ export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => searchUserQuerySchema.safeParse(data));
   if (!query.success) throw createError(error400);
 
-  if (!!query.data.username && !validateUsernameSearchQuery(query.data.username)) throw createError(error400);
-  if (!!query.data.realName && !validateRealNameSearchQuery(query.data.realName)) throw createError(error400);
+  if ('username' in query.data && !validateUsernameSearchQuery(query.data.username)) throw createError(error400);
+  if ('realName' in query.data && !validateRealNameSearchQuery(query.data.realName)) throw createError(error400);
 
-  // At least one of both properties is defined at this point (checked with zod)
-  const searchAttr = (query.data.username ? 'username' : 'realName');
-  const searchPattern = `%${(query.data.username || query.data.realName)}%`;
+  const searchAttr = ('username' in query.data ? 'username' : 'realName');
+  const searchPattern = `%${('username' in query.data ? query.data.username : query.data.realName)}%`;
   return await knex('user')
     .select('userID', 'username', 'realName')
-    .whereILike(searchAttr, searchPattern)
+    .whereNot({userID: event.context.user?.userID}) // Exclude current user from the search
+    .andWhereILike(searchAttr, searchPattern)
     .catch(err => {
       console.error(`Error in /api/users/search GET: ${err}`);
       throw createError(error500);

@@ -4,7 +4,7 @@ import { error400, error500 } from '~/server/errors';
 import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 
 export default defineEventHandler(async (event) => {
-  console.log('/api/route POST called');
+  console.log('/api/routes POST called');
 
   const result = await readValidatedBody(event, body => createRouteSchema.safeParse(body))
   if (!result.success) throw createError(error400);
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   return await knex('route').insert(removeUndefinedEntries(routeData), ['routeID'])
     .catch(err => {
-      console.error(`Error in /api/route POST: ${err}`);
+      console.error(`Error in /api/routes POST: ${err}`);
       throw createError(error500);
     })
     .then(datasets => {

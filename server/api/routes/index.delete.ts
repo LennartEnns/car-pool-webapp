@@ -3,19 +3,19 @@ import { error400, error404, error500 } from '~/server/errors';
 import { routeIdQuerySchema } from '~/server/schemas/query/routeQuerySchemas';
 
 export default defineEventHandler(async (event) => {
-  console.log('/api/route DELETE called');
+  console.log('/api/routes DELETE called');
 
   const query = await getValidatedQuery(event, data => routeIdQuerySchema.safeParse(data));
   if (!query.success) throw createError(error400);
 
-  await knex('vehicle')
+  await knex('route')
     .where({
       userID: event.context.user?.userID,
       routeID: query.data.routeID,
     })
     .del()
     .catch(err => {
-      console.error(`Error in /api/route DELETE: ${err}`);
+      console.error(`Error in /api/routes DELETE: ${err}`);
       throw createError(error500);
     })
     .then(deletedRows => {

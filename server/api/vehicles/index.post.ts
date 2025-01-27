@@ -3,7 +3,7 @@ import knex from '~/server/db/knex';
 import { error400, error500 } from '~/server/errors';
 import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<{vehicleID: string}> => {
   console.log('/api/vehicle POST called');
 
   const result = await readValidatedBody(event, body => createVehicleSchema.safeParse(body))

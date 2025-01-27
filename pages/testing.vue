@@ -1,24 +1,24 @@
 <template>
   <NuxtLayout name="after-login">
-    <p>Hello, {{ user.username }} a.k.a. {{ user.userID }}! Your real name is {{ user.realName || 'unknown' }}!</p>
-    <p class="font-weight-bold">Vehicles by userID:</p>
-    <p>{{ vehicles }}</p>
-    <p class="font-weight-bold">Vehicle by vehicleID:</p>
-    <p>{{ singleVehicle }}</p>
-    <v-btn @click="onPostClick()">Post</v-btn>
-    <v-btn @click="onPatchClick()">Update</v-btn>
-    <v-btn @click="onDeleteClick()">Delete</v-btn>
+    <v-sheet color="#333333" width="100%" height="100%">
+      <p>Hello, {{ userData.user.username }} a.k.a. {{ userID }}! Your real name is {{ userData.user.realName || 'unknown' }}!</p>
+      <p class="font-weight-bold">Vehicles by userID:</p>
+      <p>{{ vehicles }}</p>
+      <p class="font-weight-bold">Vehicle by vehicleID:</p>
+      <p>{{ singleVehicle }}</p>
+      <v-btn @click="onPostClick()">Post</v-btn>
+      <v-btn @click="onPatchClick()">Update</v-btn>
+      <v-btn @click="onDeleteClick()">Delete</v-btn>
+    </v-sheet>
   </NuxtLayout>
 </template>
 
 <script setup>
-  let user = {};
-  if (import.meta.client) {
-    const userObj = localStorage.getItem('user');
-    if (!!userObj) user = userObj;
-  }
+  const jwtCookie = useCookie('jwt');
+  const { userID } = parseJwtPayload(jwtCookie.value);
 
-  const { data: vehicles } = useFetch('/api/vehicles', { query: { userID: user.userID } });
+  const { data: userData } = useFetch('/api/users', { query: { userID } });
+  const { data: vehicles } = useFetch('/api/vehicles', { query: { userID } });
   const { data: singleVehicle } = useFetch('/api/vehicles', { query: { vehicleID: '769be576-16a4-40a9-81c8-6ce16ed72767' } });
   let newVehicleID = null;
 
@@ -36,11 +36,11 @@
     })
     .then(response => {
       console.log(response);
-      newVehicleID = response.vehicleID;
+      if (!!response) newVehicleID = response.vehicleID;
     });
   }
   async function onPatchClick() {
-    $fetch('/api/vehicles', {
+    await $fetch('/api/vehicles', {
       method: 'PATCH',
       query: {vehicleID: newVehicleID},
       body: {
@@ -49,7 +49,7 @@
     });
   }
   async function onDeleteClick() {
-    $fetch('/api/vehicles', {
+    await $fetch('/api/vehicles', {
       method: 'DELETE',
       query: {vehicleID: newVehicleID},
     });

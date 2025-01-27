@@ -29,7 +29,7 @@
 	</NuxtLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { validateUsername } from '~/commonRules';
     import { userLimits } from '~/commonLimits';
 
@@ -40,9 +40,9 @@
     const showError = ref(false);
     const errorText = ref('');
     const rules = {
-        required: value => !!value || 'Value required',
-        requiredNotBlank: value => (!!value && value.trim().length > 0) || 'Value required',
-        validUsername: value => validateUsername(value) || 'Must use a letter followed by letters/numbers/underscores',
+        required: (value: any) => !!value || 'Value required',
+        requiredNotBlank: (value: any) => (!!value && value.trim().length > 0) || 'Value required',
+        validUsername: (value: any) => validateUsername(value) || 'Must use a letter followed by letters/numbers/underscores',
     };
 
     const runtimeConfig = useRuntimeConfig();
@@ -53,7 +53,7 @@
         secure: runtimeConfig.public.secureCookies,
     });
 
-    async function submit(event) {
+    async function submit(event: any) {
         await event;
 
         if (formValid.value) {	
@@ -77,11 +77,6 @@
         .then((response) => {
             // Save JWT token in cookie
             jwtCookie.value = response.token;
-            
-            // Save user object in local storage
-            if (import.meta.client) {
-                localStorage.setItem('user', response.user);
-            }
 
             // Navigate to homepage
             navigateTo('/home');

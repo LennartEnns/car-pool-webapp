@@ -1,3 +1,4 @@
+import { type UserData } from "~/types/userData";
 import signJwtToken from "../serverUtils/signJwtToken";
 
 export default defineEventHandler(async (event) => {
@@ -8,9 +9,8 @@ export default defineEventHandler(async (event) => {
     throw createError({statusCode: 401, message: 'Unauthorized'});
   }
 
-  const { userID, username, realName } = user;
+  const { userID } = user;
 
-  const userResObj = { userID, username, realName };
   const token = signJwtToken({ userID });
-  return { token, user: userResObj };
+  return { token };
 })

@@ -29,9 +29,10 @@
 	</NuxtLayout>
 </template>
 
-<script setup lang="ts">
+<script setup>
     import { validateUsername } from '~/commonRules';
     import { userLimits } from '~/commonLimits';
+    import encodeBasicAuth from '~/utils/auth/encodeBasicAuth';
 
     const formValid = ref(false);
     const username = ref('');
@@ -40,20 +41,12 @@
     const showError = ref(false);
     const errorText = ref('');
     const rules = {
-        required: (value: any) => !!value || 'Value required',
-        requiredNotBlank: (value: any) => (!!value && value.trim().length > 0) || 'Value required',
-        validUsername: (value: any) => validateUsername(value) || 'Must use a letter followed by letters/numbers/underscores',
+        required: value => !!value || 'Value required',
+        requiredNotBlank: value => (!!value && value.trim().length > 0) || 'Value required',
+        validUsername: value => validateUsername(value) || 'Must use a letter followed by letters/numbers/underscores',
     };
 
-    const runtimeConfig = useRuntimeConfig();
-
-    // Cookies for JWT token and user role
-    const jwtCookie = useCookie('jwt', {
-        // Set to secure if env var 'SECURE_COOKIES' is true
-        secure: runtimeConfig.public.secureCookies,
-    });
-
-    async function submit(event: any) {
+    async function submit(event) {
         await event;
 
         if (formValid.value) {	
@@ -70,14 +63,11 @@
         };
 
         // Fetch JWT token from API
-        $fetch('/api/authenticate', {
-            method: 'get',
+        $fetch('/api/auth/login', {
+            method: 'POST',
             headers,
         })
-        .then((response) => {
-            // Save JWT token in cookie
-            jwtCookie.value = response.token;
-
+        .then(() => {
             // Navigate to homepage
             navigateTo('/home');
         })

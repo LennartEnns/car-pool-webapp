@@ -1,4 +1,4 @@
-import decodeBasicAuth from "../serverUtils/decodeBasicAuth";
+import decodeBasicAuth from "../serverUtils/auth/decodeBasicAuth";
 import bcrypt from "bcrypt";
 import knex from '~/server/db/knex';
 import { error401 } from "../errors";
@@ -12,7 +12,7 @@ import { error401 } from "../errors";
  * If the user is authenticated, the user object is added to the event context.
  */
 export default defineEventHandler(async (event) => {
-    if (!event.path.startsWith('/api/authenticate')) return; // Only use for authentication route
+    if (!event.path.startsWith('/api/auth/login')) return; // Only use for login route
 
     console.log('Using middleware: basicAuth.ts');
 

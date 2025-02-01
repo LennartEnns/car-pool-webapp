@@ -12,4 +12,5 @@ export const getVehicleQuerySchema = vehicleBaseSchema
         .pick({
             userID: true,
         })
+        .partial()
     );

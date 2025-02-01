@@ -52,16 +52,6 @@ CREATE TABLE Ride (
     FOREIGN KEY (routeID) REFERENCES Route(routeID) ON DELETE CASCADE
 );
 
--- For participants of a particular ride
-CREATE TABLE UserToRide (
-    userID UNIQUEIDENTIFIER NOT NULL,
-    rideID UNIQUEIDENTIFIER NOT NULL,
-    bothWays BIT NOT NULL, -- boolean: whether the user takes the ride both ways
-    PRIMARY KEY (userID, rideID),
-    FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
-    FOREIGN KEY (rideID) REFERENCES Ride(rideID) ON DELETE CASCADE
-);
-
 -- For regular participants of a route
 CREATE TABLE UserToRoute (
     userID UNIQUEIDENTIFIER NOT NULL,
@@ -70,6 +60,16 @@ CREATE TABLE UserToRoute (
     PRIMARY KEY (userID, routeID),
     FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
     FOREIGN KEY (routeID) REFERENCES Route(routeID) ON DELETE CASCADE
+);
+
+-- For participants of a particular ride
+CREATE TABLE UserToRide (
+    userID UNIQUEIDENTIFIER NOT NULL,
+    rideID UNIQUEIDENTIFIER NOT NULL,
+    bothWays BIT NOT NULL, -- boolean: whether the user takes the ride both ways
+    PRIMARY KEY (userID, rideID),
+    FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+    FOREIGN KEY (rideID) REFERENCES Ride(rideID) ON DELETE CASCADE
 );
 
 CREATE TABLE CostFactor (

@@ -2,19 +2,20 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   
   // Workaround for the weird appManifest bug
   experimental: { appManifest: false },
 
   // Runtime config from env variables
   runtimeConfig: {
-    public: {
-      secureCookies: process.env.SECURE_COOKIES === 'true',
-    },
+    secureCookies: process.env.SECURE_COOKIES === 'true',
     jwtPrivateKey: '-----BEGIN EC PRIVATE KEY-----\n' + process.env.JWT_PRIVATE_KEY + '\n-----END EC PRIVATE KEY-----\n',
     jwtPublicKey: '-----BEGIN PUBLIC KEY-----\n' + process.env.JWT_PUBLIC_KEY + '\n-----END PUBLIC KEY-----\n',
+    refreshPrivateKey: '-----BEGIN EC PRIVATE KEY-----\n' + process.env.REFRESH_PRIVATE_KEY + '\n-----END EC PRIVATE KEY-----\n',
+    refreshPublicKey: '-----BEGIN PUBLIC KEY-----\n' + process.env.REFRESH_PUBLIC_KEY + '\n-----END PUBLIC KEY-----\n',
     jwtExpirationTime: process.env.JWT_EXPIRATION_TIME,
+    refreshExpirationTime: process.env.REFRESH_EXPIRATION_TIME,
     registrationKey: process.env.REGISTRATION_KEY,
   },
 

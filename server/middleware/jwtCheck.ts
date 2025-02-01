@@ -6,15 +6,14 @@ import { error401 } from '../errors';
  */
 export default defineEventHandler(async (event) => {
   if (!event.path.startsWith('/api/')) return; // Only apply to API routes
-  if (event.path.startsWith('/api/authenticate')
+  if (event.path.startsWith('/api/auth')
       || (event.path.startsWith('/api/users') && event.method === 'POST'))
-      return; // Do not apply to authentication or registration route
+      return; // Do not apply to login, logout, refresh or registration route
 
   console.log('Using middleware: jwtCheck.ts');
 
-  const cookies = parseCookies(event);
-
-  const jwtToken = cookies?.jwt;
+  const jwtToken = getCookie(event, 'jwt');
+  if (!jwtToken) throw createError(error401);
 
   const runtimeConfig = useRuntimeConfig(event);
   const publicKey = runtimeConfig.jwtPublicKey;
@@ -25,8 +24,8 @@ export default defineEventHandler(async (event) => {
     throw createError(error401);
   }
 
-  console.log('JWT token is valid');
-
-  // Add relevant user information to the event context
+  console.log("jwtCheck passed");
+  
+  // Add user ID to the event context
   event.context.user = { userID: decoded.userID };
 })

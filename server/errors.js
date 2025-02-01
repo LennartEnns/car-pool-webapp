@@ -1,6 +1,6 @@
 export const error400 = {
     statusCode: 400,
-    message: 'Bad Request',
+    statusMessage: 'Bad Request',
 }
 
 export const error401 = {
@@ -25,5 +25,5 @@ export const error409 = {
 
 export const error500 = {
     statusCode: 500,
-    message: 'Internal Server Error',
+    statusMessage: 'Internal Server Error',
 }

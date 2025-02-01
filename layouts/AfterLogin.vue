@@ -22,21 +22,16 @@
 </template>
 
 <script setup>
-  const runtimeConfig = useRuntimeConfig();
-  const jwtCookie = useCookie('jwt', {
-      secure: runtimeConfig.public.secureCookies,
-      httpOnly: runtimeConfig.public.secureCookies,
-  });
-
-  const onAccountSettings = () => {
-    navigateTo('/account');
+  const onAccountSettings = async () => {
+    await navigateTo('/account');
   };
-  const onLogout = () => {
-    jwtCookie.value = null;
-    navigateTo('/login');
+  const onLogout = async () => {
+    await $fetch('/api/auth/logout', { method: 'POST' }) // Trigger deletion of the token cookies
+      .catch((err) => {}); // Ignore logout errors
+    await navigateTo('/login');
   };
-  const returnHome = () => {
-    navigateTo('/home');
+  const returnHome = async () => {
+    await navigateTo('/home');
   };
 
   onMounted(() => {

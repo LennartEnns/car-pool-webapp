@@ -49,14 +49,6 @@
         validRealName: value => (!value || validateRealNameBeforeTitleCase(value)) || 'Must use letters separated by spaces/hyphens',
     };
 
-    const runtimeConfig = useRuntimeConfig();
-
-    // Cookies for JWT token and user role
-    const jwtCookie = useCookie('jwt', {
-        // Set to secure if env var 'SECURE_COOKIES' is true
-        secure: runtimeConfig.public.secureCookies,
-    });
-
     async function submit(event) {
         await event;
 
@@ -83,10 +75,7 @@
                 password: password.value,
             })
         })
-        .then((response) => {
-            // Save JWT token in cookie
-            jwtCookie.value = response.token;
-
+        .then(() => {
             // Navigate to homepage
             navigateTo('/home');
         })

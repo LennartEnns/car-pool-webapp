@@ -1,5 +1,5 @@
 import knex from '~/server/db/knex';
-import signJwtToken from '~/server/serverUtils/signJwtToken';
+import { signJwtToken, signRefreshToken } from '~/server/serverUtils/auth/jwt';
 import { error400, error409, error500 } from '~/server/errors';
 import { validateUsername, validateRealNameBeforeTitleCase } from '~/commonRules';
 import bcrypt from 'bcrypt';
@@ -45,7 +45,26 @@ export default defineEventHandler(async (event) => {
   .then(datasets => {
     if (!datasets || datasets.length === 0) throw createError(error500);
     const userID: string = datasets[0].userID;
-    const token = signJwtToken({userID});
-    return { token };
+
+    const jwtToken = signJwtToken({ userID });
+    const refreshToken = signRefreshToken({ userID });
+
+    const runtimeConfig = useRuntimeConfig(event);
+    setCookie(event, 'jwt', jwtToken, {
+      secure: runtimeConfig.secureCookies,
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/api',
+      maxAge: parseInt(runtimeConfig.jwtExpirationTime),
+    });
+    setCookie(event, 'refresh', refreshToken, {
+      secure: runtimeConfig.secureCookies,
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/api/auth/refresh',
+      maxAge: parseInt(runtimeConfig.refreshExpirationTime),
+    });
+
+    return new Response(null, { status: 200 });
   });
 })

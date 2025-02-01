@@ -1,7 +1,6 @@
 import knex from '~/server/db/knex';
 import { error400, error403, error404, error500 } from '~/server/errors';
 import { getVehicleQuerySchema } from '~/server/schemas/query/vehicleQuerySchemas';
-import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 
 export default defineEventHandler(async (event) => {
   console.log('/api/vehicles GET called');
@@ -9,13 +8,14 @@ export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => getVehicleQuerySchema.safeParse(data));
   if (!query.success) throw createError(error400);
 
-  if (!!query.data.userID && query.data.userID !== event.context.user?.userID) {
+  if ('userID' in query.data && !!query.data.userID && query.data.userID !== event.context.user?.userID) {
     throw createError(error403);
   }
+  const searchObj = { ...query.data, userID: 'userID' in query.data ? (query.data.userID || event.context.user?.userID) : event.context.user?.userID };
 
   return await knex('vehicle')
     .select('vehicleID', 'name', 'model', 'description', 'consumption', 'electric')
-    .where(removeUndefinedEntries(query.data))
+    .where(searchObj)
     .orderBy('name', 'asc')
     .catch(err => {
       console.error(`Error in /api/vehicle GET: ${err}`);

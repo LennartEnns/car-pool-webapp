@@ -1,7 +1,6 @@
 import knex from '~/server/db/knex';
 import { error400, error403, error404, error500 } from '~/server/errors';
 import { getRideQuerySchema } from '~/server/schemas/query/rideQuerySchemas';
-import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 import { rideLimits } from '~/commonLimits';
 
 export default defineEventHandler(async (event) => {
@@ -13,24 +12,28 @@ export default defineEventHandler(async (event) => {
   // Only allow access by routeID if the user is an owner/participant of the route
   if ('routeID' in query.data) {
     await knex('route')
-      .first('userID')
-      .where({userID: event.context.user.userID})
+      .first(1)
+      .where({userID: event.context.user?.userID})
       .union(
         knex('userToRoute')
-        .first('userID')
+        .first(1)
         .where({userID: event.context.user?.userID})
       )
       .catch(err => {
         throw createError(error500);
       })
-      .then(userID => {
-        if (!userID) throw createError(error403);
+      .then(val => {
+        if (!val) throw createError(error403);
       });
   }
 
-  return await knex('ride')
-    .select('*')
-    .where(removeUndefinedEntries(query.data))
+  let dbQuery = knex('ride').select('*');
+
+  if ('rideID' in query.data) dbQuery = dbQuery.where({rideID: query.data.rideID});
+  else dbQuery = dbQuery.where({routeID: query.data.routeID})
+    .andWhere('arrivalDatetime', '>=', query.data.minArrivalDatetime);
+
+  await dbQuery
     .orderBy('arrivalDatetime', 'desc')
     .limit(rideLimits.maxGetResults, { skipBinding: true }) // Limit number of returned results
     .catch(err => {

@@ -1,11 +1,11 @@
 let refreshPromise: Promise<{ status: number }> | null = null;
 
-export default async (cookieHeader?: string): Promise<{ status: number }> => {
+export default async (): Promise<{ status: number }> => {
   if (refreshPromise) return refreshPromise;
 
   console.log("Refresh lock: Initiating new request");
   refreshPromise = new Promise((resolve, reject) => {
-    $fetch('/api/auth/refresh', { method: 'POST', headers: !!cookieHeader ? { cookie: cookieHeader } : undefined })
+    $fetch('/api/auth/refresh', { method: 'POST' })
     .then(response => {
       resolve({ status: response?.status || 200 });
     })

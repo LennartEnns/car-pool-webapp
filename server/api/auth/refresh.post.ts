@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     secure: runtimeConfig.secureCookies,
     httpOnly: true,
     sameSite: 'strict',
-    // path: '/api',
+    path: '/api',
     maxAge: parseInt(runtimeConfig.jwtExpirationTime),
   });
 

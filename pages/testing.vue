@@ -1,11 +1,17 @@
 <template>
   <NuxtLayout name="after-login">
     <v-sheet color="#333" width="100%" height="100%">
-      <p>Hello, {{ userData?.user.username }} a.k.a. {{ userData?.user.userID }}! Your real name is {{ userData?.user.realName || 'unknown' }}!</p>
+      <ClientOnly>
+        <p v-if="userDataStatus==='success'">Hello, {{ userData?.user.username }} a.k.a. {{ userData?.user.userID }}! Your real name is {{ userData?.user.realName || 'unknown' }}!</p>
+      </ClientOnly>
       <p class="font-weight-bold">Vehicles by userID:</p>
-      <p>{{ vehicles }}</p>
+      <ClientOnly>
+        <p v-if="vehicleStatus1==='success'">{{ vehicles }}</p>
+      </ClientOnly>
       <p class="font-weight-bold">Vehicle by vehicleID:</p>
-      <p>{{ singleVehicle }}</p>
+      <ClientOnly>
+        <p v-if="vehicleStatus2==='success'">{{ singleVehicle }}</p>
+      </ClientOnly>
       <v-btn @click="onPostClick()">Post</v-btn>
       <v-btn @click="onPatchClick()">Update</v-btn>
       <v-btn @click="onDeleteClick()">Delete</v-btn>
@@ -17,9 +23,10 @@
   const { $api } = useNuxtApp();
 
   // BUG: useApi request does not contain the token cookies during SSR
-  const { data: userData } = await useApi('/api/users', { lazy: true, server: false });
-  const { data: vehicles } = await useApi('/api/vehicles', { lazy: true, server: false });
-  const { data: singleVehicle } = await useApi('/api/vehicles', { query: { vehicleID: '769be576-16a4-40a9-81c8-6ce16ed72767' }, lazy: true, server: false });
+  const lazy = { lazy: true, server: false };
+  const { data: userData, status: userDataStatus } = await useApi('/api/users', lazy);
+  const { data: vehicles, status: vehicleStatus1 } = await useApi('/api/vehicles', lazy);
+  const { data: singleVehicle, status: vehicleStatus2 } = await useApi('/api/vehicles', { query: { vehicleID: '769be576-16a4-40a9-81c8-6ce16ed72767' }, ...lazy });
   let newVehicleID = null;
 
   async function onPostClick() {

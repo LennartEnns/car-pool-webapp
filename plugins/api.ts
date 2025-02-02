@@ -9,16 +9,12 @@ export default defineNuxtPlugin((nuxtApp) => {
     baseURL: '/api',
     retry: 1, // Retry once
     retryStatusCodes: [401], // Retry only if 401 was received
-    // async onRequest({ request, options }) {
-    //   console.log("JWT: " + useCookie('jwt').value);
-    //   console.log("Refresh: " + useCookie('refresh').value);
-    // },
     async onResponse({ response, options }) {
       // Handle 401 errors (token expired)
       if (response.status === 401) {
         // Attempt to refresh the tokens
         console.log("$api: Trying to refresh...");
-        const { status: refreshStatus } = await requestTokenRefresh(options.headers.get('cookie') || undefined);
+        const { status: refreshStatus } = await requestTokenRefresh();
 
         if (refreshStatus !== 200) {
           // If refresh was not successful, do not retry

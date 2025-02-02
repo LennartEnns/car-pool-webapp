@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
       return; // Do not apply to login, logout, refresh or registration route
 
   console.log('Using middleware: jwtCheck.ts');
-  console.log(getCookie(event, 'refresh'));
 
   const jwtToken = getCookie(event, 'jwt');
   if (!jwtToken) throw createError(error401);

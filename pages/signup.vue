@@ -30,6 +30,9 @@
     import { validateUsername, validateRealNameBeforeTitleCase } from '~/commonRules';
     import { userLimits } from '~/commonLimits';
 
+    const session = useUserSession();
+    const authenticated = useCookie('authenticated');
+
     const formValid = ref(false);
 
     const regKey = ref('');
@@ -75,7 +78,11 @@
                 password: password.value,
             })
         })
-        .then(() => {
+        .then((response) => {
+            // Update session state
+            session.value = response.user;
+            authenticated.value = '1';
+
             // Navigate to homepage
             navigateTo('/home');
         })

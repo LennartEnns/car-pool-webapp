@@ -9,11 +9,13 @@ export default defineEventHandler(async (event) => {
     throw createError(error401);
   }
 
-  const { userID } = user;
+  const { userID, username, realName } = user;
   const jwtToken = signJwtToken({ userID });
   const refreshToken = signRefreshToken({ userID });
 
   const runtimeConfig = useRuntimeConfig(event);
+
+  // Set cookies
   setCookie(event, 'jwt', jwtToken, {
     secure: runtimeConfig.secureCookies,
     httpOnly: true,
@@ -29,5 +31,5 @@ export default defineEventHandler(async (event) => {
     maxAge: parseInt(runtimeConfig.refreshExpirationTime),
   });
 
-  return new Response(null, { status: 200 });
+  return { user: { userID, username, realName: realName || undefined } };
 })

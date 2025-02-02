@@ -23,7 +23,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         if (refreshStatus === 401) {
           console.log("$api: Refresh unauthenticated...");
           // If refresh token is invalid, log out
-          // Later add other logout functionality (clearing state etc.)
+          const session = useUserSession();
+          // Clear session data
+          session.value = null;
 
           await nuxtApp.runWithContext(() => navigateTo('/login'));
           return;

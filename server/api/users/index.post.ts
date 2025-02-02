@@ -65,6 +65,6 @@ export default defineEventHandler(async (event) => {
       maxAge: parseInt(runtimeConfig.refreshExpirationTime),
     });
 
-    return new Response(null, { status: 200 });
+    return { user: { userID, userName: finalUsername, realName: finalRealName || undefined } };
   });
 })

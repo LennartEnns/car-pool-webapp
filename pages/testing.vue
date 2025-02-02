@@ -2,7 +2,7 @@
   <NuxtLayout name="after-login">
     <v-sheet color="#333" width="100%" height="100%">
       <ClientOnly>
-        <p v-if="userDataStatus==='success'">Hello, {{ userData?.user.username }} a.k.a. {{ userData?.user.userID }}! Your real name is {{ userData?.user.realName || 'unknown' }}!</p>
+        <p>Hello, {{ userData?.username }} a.k.a. {{ userData?.userID }}! Your real name is {{ userData?.realName || 'unknown' }}!</p>
       </ClientOnly>
       <p class="font-weight-bold">Vehicles by userID:</p>
       <ClientOnly>
@@ -21,10 +21,10 @@
 
 <script setup>
   const { $api } = useNuxtApp();
+  const userData = useUserSession();
 
   // BUG: useApi request does not contain the token cookies during SSR
   const lazy = { lazy: true, server: false };
-  const { data: userData, status: userDataStatus } = await useApi('/api/users', lazy);
   const { data: vehicles, status: vehicleStatus1 } = await useApi('/api/vehicles', lazy);
   const { data: singleVehicle, status: vehicleStatus2 } = await useApi('/api/vehicles', { query: { vehicleID: '769be576-16a4-40a9-81c8-6ce16ed72767' }, ...lazy });
   let newVehicleID = null;

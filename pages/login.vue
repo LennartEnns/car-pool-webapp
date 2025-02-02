@@ -33,6 +33,10 @@
     import { validateUsername } from '~/commonRules';
     import { userLimits } from '~/commonLimits';
     import encodeBasicAuth from '~/utils/auth/encodeBasicAuth';
+    import { useUserSession } from '~/composables/useUserSession';
+
+    const session = useUserSession();
+    const authenticated = useCookie('authenticated');
 
     const formValid = ref(false);
     const username = ref('');
@@ -67,7 +71,11 @@
             method: 'POST',
             headers,
         })
-        .then(() => {
+        .then((response) => {
+            // Update session state
+            session.value = response.user;
+            authenticated.value = '1';
+
             // Navigate to homepage
             navigateTo('/home');
         })

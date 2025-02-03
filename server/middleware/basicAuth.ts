@@ -16,13 +16,13 @@ export default defineEventHandler(async (event) => {
 
     console.log('Using middleware: basicAuth.ts');
 
-    const authHeader = event.headers.get('Authorization');
+    const authHeader = getHeader(event, 'Authorization');
     if (!authHeader || !authHeader.startsWith('Basic ')) {
         throw createError(error401);
     }
 
     const { username, password } = decodeBasicAuth(authHeader); // Extract credentials
-    const user = await knex('user').first('*').where({username: username.toLowerCase()}); // Find the user in the database
+    const user = await knex('user').first('*').where({username: username.toLowerCase()});
     if (!user) {
         throw createError(error401);
     }

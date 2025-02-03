@@ -1,6 +1,6 @@
 <template>
 	<NuxtLayout name="checkin-pages">
-        <v-card class="form-card mt-8" width="400px" max-width="90%" variant="elevated">
+        <v-card class="border-card mt-8 rounded-xl" width="400px" max-width="90%" variant="elevated">
             <v-card-title class="text-center text-h5 font-weight-bold">
                 <span class="headline">Sign in</span>
             </v-card-title>
@@ -61,7 +61,6 @@
     async function requestLogin() {
         loading.value = true;
 
-        // Set headers for POST request
         const headers = {
             'Authorization': encodeBasicAuth(username.value.trim(), password.value),
         };
@@ -83,13 +82,12 @@
             switch (error.data?.statusCode) {
                 case 401:
                     errorText.value = 'Wrong username or password';
-                    showError.value = true;
                     break;
                 default:
                 errorText.value = 'Unexpected Error' + (error.data?.statusCode ? `: ${error.data.statusCode} ${error.data.statusText || ''}` : '');
-                    showError.value = true;
                     break;
             }
+            showError.value = true;
         })
         .finally(() => {
             loading.value = false;
@@ -98,7 +96,5 @@
 </script>
 
 <style scoped>
-    .form-card {
-        border: 5px solid darkcyan;
-    }
+    
 </style>

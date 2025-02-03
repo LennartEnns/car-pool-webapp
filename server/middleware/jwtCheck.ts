@@ -17,15 +17,17 @@ export default defineEventHandler(async (event) => {
 
   const runtimeConfig = useRuntimeConfig(event);
   const publicKey = runtimeConfig.jwtPublicKey;
-  const decoded = jwt.verify(jwtToken, publicKey, { algorithms: ['ES512'], clockTimestamp: new Date().getSeconds() }) as JwtPayload;
-
-  if (!decoded || !decoded.userID) {
-    console.log('JWT token is invalid');
+  try {
+    const decoded = jwt.verify(jwtToken, publicKey, { algorithms: ['ES512'], clockTimestamp: new Date().getSeconds() }) as JwtPayload;
+    if (!decoded || !decoded.userID) {
+      console.log('JWT token is invalid');
+      throw createError(error401);
+    }
+    // Add user ID to the event context
+    event.context.user = { userID: decoded.userID };
+  } catch (err) {
     throw createError(error401);
   }
 
   console.log("jwtCheck passed");
-  
-  // Add user ID to the event context
-  event.context.user = { userID: decoded.userID };
 })

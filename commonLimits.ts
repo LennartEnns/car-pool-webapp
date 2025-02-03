@@ -1,5 +1,5 @@
 export const userLimits = {
-    username: 50,
+    username: 20,
     realName: 50,
 }
 

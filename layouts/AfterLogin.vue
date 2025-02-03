@@ -22,23 +22,25 @@
 </template>
 
 <script setup>
+  const session = useUserSession();
+  const authenticated = useCookie('authenticated');
+
   onMounted(() => {
     // Log out if no session data is present 
     if (import.meta.client && !useUserSession().value) {
-      useCookie('authenticated').value = undefined;
+      authenticated.value = undefined;
       navigateTo('/login');
     }
   });
-
-  const session = useUserSession();
-  const authenticated = useCookie('authenticated');
 
   const onAccountSettings = async () => {
     await navigateTo('/account');
   };
   const onLogout = async () => {
-    await $fetch('/api/auth/logout', { method: 'POST' }) // Trigger deletion of the token cookies
-      .catch((err) => {}); // Ignore logout errors
+    await $fetch('/api/auth/logout', { method: 'POST' }) // Trigger deletion of the access token
+      .catch(() => {}); // Ignore errors
+    await $fetch('/api/auth/refresh', { method: 'DELETE' }) // Trigger deletion of the refresh token
+      .catch(() => {}); // Ignore errors
     
     // Delete session data
     session.value = null;

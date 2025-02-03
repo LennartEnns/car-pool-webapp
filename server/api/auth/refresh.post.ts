@@ -1,7 +1,6 @@
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 import { error401 } from '~/server/errors';
 import { signJwtToken } from '~/server/serverUtils/auth/jwt';
-import logout from '~/server/serverUtils/auth/logout';
 
 export default defineEventHandler(async (event) => {
   console.log('/api/auth/refresh POST called');
@@ -9,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const refreshToken = getCookie(event, 'refresh');
   if (!refreshToken) {
     console.log('Refresh token not present');
-    logout(event);
+    deleteCookie(event, 'jwt');
     throw createError(error401);
   }
   if (!!getCookie(event, 'jwt')) {
@@ -19,24 +18,27 @@ export default defineEventHandler(async (event) => {
 
   const runtimeConfig = useRuntimeConfig(event);
   const publicKey = runtimeConfig.refreshPublicKey;
-  const decoded = jwt.verify(refreshToken, publicKey, { algorithms: ['ES512'], clockTimestamp: new Date().getSeconds() }) as JwtPayload;
+  try {
+    const decoded = jwt.verify(refreshToken, publicKey, { algorithms: ['ES512'], clockTimestamp: new Date().getSeconds() }) as JwtPayload;
+    if (!decoded || !decoded.userID) {
+      console.log('Refresh token is invalid');
+      deleteCookie(event, 'jwt');
+      deleteCookie(event, 'refresh');
+      throw createError(error401);
+    }
+    console.log('Refresh token is valid');
+    const newAccessToken = signJwtToken({ userID: decoded.userID });
 
-  if (!decoded || !decoded.userID) {
-    console.log('Refresh token is invalid');
-    logout(event);
+    setCookie(event, 'jwt', newAccessToken, {
+      secure: runtimeConfig.secureCookies,
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/api',
+      maxAge: parseInt(runtimeConfig.jwtExpirationTime),
+    });
+  } catch (err) {
     throw createError(error401);
   }
-
-  console.log('Refresh token is valid');
-  const newAccessToken = signJwtToken({ userID: decoded.userID });
-
-  setCookie(event, 'jwt', newAccessToken, {
-    secure: runtimeConfig.secureCookies,
-    httpOnly: true,
-    sameSite: 'strict',
-    path: '/api',
-    maxAge: parseInt(runtimeConfig.jwtExpirationTime),
-  });
 
   return new Response(null, { status: 200 });
 })

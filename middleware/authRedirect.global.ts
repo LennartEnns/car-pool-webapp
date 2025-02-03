@@ -7,6 +7,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!authenticated.value) {
         return navigateTo('/login');
     }
+    authenticated.value = '1'; // Adjust in case the user set it to something large
 
     // Redirects authenticated user to /home if navigation to root path is attempted.
     if (to.path === '/' && !!authenticated.value) {

@@ -3,14 +3,14 @@
     <v-sheet class="d-flex flex-column align-center justify-center" color="#333" width="100%" height="100%">
       <DefaultCard class="mt-8 rounded-xl" card-title="Edit Account">
           <v-card-text>
-            <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
+            <v-form @submit.prevent="submit" v-model="formValid">
               <ClientOnly>
                 <v-text-field v-model="oldPassword" label="Current password" type="password" :rules="[rules.required]"></v-text-field>
                 <v-text-field v-model="username" label="Username" type="text" :rules="[rules.requiredNotBlank, rules.validUsername]" :maxlength="userLimits.username"></v-text-field>
                 <v-text-field v-model="realName" label="Real name (optional)" type="text" :rules="[rules.validRealName]" :maxlength="userLimits.realName"></v-text-field>
                 <v-text-field v-model="newPassword" label="New password (optional)" type="password"></v-text-field>
                 <v-text-field v-model="confirmNewPassword" label="Confirm new password" type="password" :rules="[rules.matchPassword]"></v-text-field>
-                <v-btn :disabled="!different" type="submit" color="error" :loading="loading">
+                <v-btn :disabled="!formValid || !different" type="submit" color="error" :loading="loading">
                   Update
                   <v-icon icon="mdi-account-sync" end></v-icon>
                 </v-btn>

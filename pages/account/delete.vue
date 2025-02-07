@@ -3,9 +3,9 @@
     <v-sheet class="d-flex flex-column align-center justify-center" color="#333" width="100%" height="100%">
       <DefaultCard class="mt-8 rounded-xl" card-title="Delete Account">
           <v-card-text>
-            <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
+            <v-form @submit.prevent="submit" v-model="formValid">
               <v-text-field v-model="password" label="Password" type="password" :rules="[rules.required]"></v-text-field>
-              <v-btn type="submit" color="error" :loading="loading">
+              <v-btn type="submit" color="error" :loading="loading" :disabled="!formValid">
                 Delete
                 <v-icon icon="mdi-delete-forever" end></v-icon>
               </v-btn>
@@ -21,8 +21,6 @@
 </template>
 
 <script setup>
-  import defaultCard from '~/components/DefaultCard.vue';
-
   const { $api } = useNuxtApp();
 
   const session = useUserSession();

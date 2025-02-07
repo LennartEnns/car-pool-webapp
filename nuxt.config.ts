@@ -18,8 +18,8 @@ export default defineNuxtConfig({
     jwtPublicKey: '-----BEGIN PUBLIC KEY-----\n' + 'MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQA2rbFPHU0Stjg8lZHt0hge7XClgpu1JoXXz44QkjIydhmvGej7RwmcNZVehDpoksC3TIJskoenhtkP0l3r1zgMQYANvLuCa3wNLvzClrqGb0HBglYjB/gsdjCR7e1lo/wA3RwP9WijbtyrkobXD9MIo0sIl31beRnqDUr3glgosNxAEE=' + '\n-----END PUBLIC KEY-----\n',
     refreshPrivateKey: '-----BEGIN EC PRIVATE KEY-----\n' + 'MIHcAgEBBEIAmFvnGPg2cVmFMLSVLOOsVA/UlOqoOKz2GhC0oD6zVnfcLuIj4QVgwfOhiPfSwwSTy84YziBsIu1I2sjYh6hEh76gBwYFK4EEACOhgYkDgYYABABaFpEsTJ5XaxWQ8nghP20fz+Qd0DiJKImGcnZn7F7wgoZokZSF9L77sDD6quhgLMSPQEKNDLL8gjtwAzsobLi7YABMQdBWg5TVeAe0xeqG2TxiuI0DQDDkWrdnB1mUKOG0tUeUfZ+Unj3L9YCVGskLel1WusF0gYDJJ461VE7K0O+ZPQ==' + '\n-----END EC PRIVATE KEY-----\n',
     refreshPublicKey: '-----BEGIN PUBLIC KEY-----\n' + 'MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAWhaRLEyeV2sVkPJ4IT9tH8/kHdA4iSiJhnJ2Z+xe8IKGaJGUhfS++7Aw+qroYCzEj0BCjQyy/II7cAM7KGy4u2AATEHQVoOU1XgHtMXqhtk8YriNA0Aw5Fq3ZwdZlCjhtLVHlH2flJ49y/WAlRrJC3pdVrrBdIGAySeOtVROytDvmT0=' + '\n-----END PUBLIC KEY-----\n',
-    jwtExpirationTime: '1m', // Low value for testing
-    refreshExpirationTime: '1h',
+    jwtExpirationTime: '60', // Low value for testing
+    refreshExpirationTime: '3600',
     registrationKey: '123', // Simple key for testing
   }
   // Production config (uses environment variables)

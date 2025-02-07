@@ -1,5 +1,5 @@
 <template>
-  <v-card class="border-card mt-4" width="350px" max-width="90%" variant="elevated">
+  <v-card class="border-card mt-4" width="400px" max-width="90%" variant="elevated">
     <v-card-title class="text-center text-h5 font-weight-bold">
       <span class="headline">{{ cardTitle }}</span>
     </v-card-title>
@@ -25,7 +25,8 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      {{ route.name }}
+      <div v-if="isUTCInRange(route.startDate, route.endDate)">{{ route.name }}</div>
+      <div v-else class="text-grey">{{ route.name }} (Inactive)</div>
       <v-spacer />
       <v-icon>mdi-chevron-right</v-icon>
     </div>
@@ -62,6 +63,12 @@
     showDeleteDialog.value = false;
     emit('delete', index);
   }
+
+  // Computes whether the current UTC date is within the range of the start and end dates
+  const isUTCInRange = (startDate, endDate) => {
+    const now = new Date();
+    return new Date(startDate) <= now && now <= new Date(endDate);
+  };
 </script>
 
 <style scoped>

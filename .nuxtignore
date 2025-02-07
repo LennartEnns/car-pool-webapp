@@ -1,5 +1,6 @@
-server/db/dev
+db/
+server/db/dev/
 server/db/data/dev/
-server/db/migrations/dev
-server/db/seeds/dev
-server/db/scripts
+server/db/migrations/dev/
+server/db/seeds/dev/
+server/db/scripts/

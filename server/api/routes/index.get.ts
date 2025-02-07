@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   delete queryObj.preview;
 
   return await knex('route')
-    .select(preview ? ['routeID', 'name'] : '*')
+    .select(preview ? ['routeID', 'name', 'validFrom', 'validTo'] : '*')
     .where(queryObj)
     .orderBy('name', 'asc')
     .catch(err => {

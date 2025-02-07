@@ -1,9 +1,9 @@
 <template>
   <v-app-bar color="primary">
-    <v-app-bar-nav-icon icon="mdi-home" size="x-large" @click="returnHome" />
-    <v-app-bar-title class="flex text-center font-weight-bold"><b>C</b>ar <b>P</b>ool <b>C</b>ost <b>D</b>istributor</v-app-bar-title>
-    <v-btn size="x-large" icon>
-      <v-icon size="large">mdi-account</v-icon>
+    <v-icon icon="mdi-home" class="icon ml-2 mr-2" @click="returnHome" />
+    <v-app-bar-title class="flex text-center font-weight-bold mx-auto">Car Pool Cost Distributor</v-app-bar-title>
+    <v-btn icon>
+      <v-icon class="icon">mdi-account</v-icon>
       <v-menu activator="parent">
         <v-list>
           <v-list-item prepend-icon="mdi-account-settings" @click="onAccountSettings">
@@ -29,6 +29,7 @@
     // Log out if no session data is present 
     if (import.meta.client && !useUserSession().value) {
       authenticated.value = undefined;
+      clearNuxtData();
       navigateTo('/login');
     }
   });
@@ -45,6 +46,7 @@
     // Delete session data
     session.value = null;
     authenticated.value = undefined;
+    clearNuxtData();
 
     await navigateTo('/login');
   };
@@ -59,6 +61,8 @@
   });
 </script>
 
-<style>
-  
+<style scoped>
+  .icon {
+    font-size: 35px;
+  }
 </style>

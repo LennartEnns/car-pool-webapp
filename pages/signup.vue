@@ -1,10 +1,6 @@
 <template>
 	<NuxtLayout name="checkin-pages">
-        <v-card class="border-card mt-8 rounded-xl" width="400px" max-width="90%" variant="elevated">
-            <v-card-title class="text-center text-h5 font-weight-bold">
-                <span class="headline">Registration</span>
-            </v-card-title>
-            <v-divider class="mx-3"/>
+        <DefaultCard class="mt-8 rounded-xl" card-title="Registration">
             <v-card-text>
                 <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
                     <v-text-field v-model="regKey" label="Registration Key" type="password" :rules="[rules.required]"></v-text-field>
@@ -18,17 +14,18 @@
                     </v-btn>
                 </v-form>
             </v-card-text>
-            <v-snackbar v-model="showError" color="error" location="top" vertical timeout="4000">
-                <div class="text-h6">Error</div>
-                <p>{{ errorText }}</p>
-            </v-snackbar>
-        </v-card>
+        </DefaultCard>
+        <v-snackbar v-model="showError" color="error" location="top" vertical timeout="4000">
+            <div class="text-h6">Error</div>
+            <p>{{ errorText }}</p>
+        </v-snackbar>
 	</NuxtLayout>
 </template>
 
 <script setup>
     import { validateUsername, validateRealNameBeforeTitleCase } from '~/commonRules';
     import { userLimits } from '~/commonLimits';
+    import DefaultCard from '~/components/DefaultCard.vue';
 
     const session = useUserSession();
     const authenticated = useCookie('authenticated');

@@ -18,4 +18,20 @@
   .big-button:hover {
     background-color: darkslategray;
   }
+
+  .responsive-font-size-1 {
+    font-size: 16px;
+
+    @media (min-width: 600px) {
+      font-size: 18px;
+    }
+
+    @media (min-width: 960px) {
+      font-size: 22px;
+    }
+
+    @media (min-width: 1264px) {
+      font-size: 26px;
+    }
+  }
 </style>

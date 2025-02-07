@@ -68,7 +68,7 @@ CREATE TABLE UserToRide (
     rideID UNIQUEIDENTIFIER NOT NULL,
     bothWays BIT NOT NULL, -- boolean: whether the user takes the ride both ways
     PRIMARY KEY (userID, rideID),
-    FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE SET NULL,
     FOREIGN KEY (rideID) REFERENCES Ride(rideID) ON DELETE CASCADE
 );
 
@@ -77,7 +77,7 @@ CREATE TABLE CostFactor (
     routeID UNIQUEIDENTIFIER NULL, -- ID of the route that the cost is linked to
     name NVARCHAR(40) NOT NULL DEFAULT '', -- e.g., "Parking"
 
-    period NCHAR(1) NOT NULL, -- e.g., 'm' for monthly, 'r' for every ride, 'k' for every km, 'l' for every liter/kWh (fuel cost)
+    period CHAR(1) NOT NULL, -- e.g., 'm' for monthly, 'r' for every ride, 'k' for every km, 'l' for every liter/kWh (fuel cost)
     periodMultiplier SMALLINT NOT NULL DEFAULT 1, -- e.g., 'k' and 100 for 'every 100 km'
     inflictionMode CHAR(1) NOT NULL, -- 'p' for 'inflict by ride participation', 'a' for 'inflict on all route participants'
     distributionMode CHAR(1) NOT NULL, -- 's' for 'split', f for 'inflict full amount on everyone'
@@ -101,14 +101,14 @@ CREATE TABLE CostInfliction (
     costFactorID UNIQUEIDENTIFIER NOT NULL,
     rideID UNIQUEIDENTIFIER NULL, -- ID of the ride a cost was inflicted for (NULL if CostFactor.period is not 'r', 'k' or 'l')
     derivedAmount DECIMAL(10, 2) NOT NULL, -- Final cost amount for the user
-    paid BIT NOT NULL DEFAULT 0, -- Whether the infliction has been paid by the user
+    costStatus CHAR(3) NOT NULL DEFAULT 'pnd', -- pnd = pending, inf = inflicted, pad = paid
     inflictionDatetime DATETIME NOT NULL DEFAULT GETDATE(), -- Datetime of infliction with current datetime as default
 
     -- Snapshot = Variable at the time of infliction (for preservation in recalculations)
     -- amountSnapshot DECIMAL(10, 2) NOT NULL, -- Cost factor amount used at the time of infliction
     -- consumptionSnapshot DECIMAL(10, 2) NULL, -- Consumption used at the time of infliction (only used in inflictions for 'per l' costs)
 
-    FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE SET NULL,
     FOREIGN KEY (costFactorID) REFERENCES CostFactor(costFactorID) ON DELETE CASCADE,
     FOREIGN KEY (rideID) REFERENCES Ride(rideID) ON DELETE CASCADE
 );

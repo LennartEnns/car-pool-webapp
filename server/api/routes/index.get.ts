@@ -1,7 +1,6 @@
 import knex from '~/server/db/knex';
 import { error400, error404, error500 } from '~/server/errors';
 import { getRouteQuerySchema } from '~/server/schemas/query/routeQuerySchemas';
-import removeUndefinedEntries from '~/utils/removeUndefinedEntries';
 
 export default defineEventHandler(async (event) => {
   console.log('/api/routes GET called');
@@ -9,9 +8,14 @@ export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => getRouteQuerySchema.safeParse(data));
   if (!query.success) throw createError(error400);
 
+  const queryObj = query.data;
+  if (!('routeID' in queryObj) && !queryObj.userID) queryObj.userID = event.context.user?.userID;
+  const preview = queryObj.preview || false;
+  delete queryObj.preview;
+
   return await knex('route')
-    .select('*')
-    .where(removeUndefinedEntries(query.data))
+    .select(preview ? ['routeID', 'name'] : '*')
+    .where(queryObj)
     .orderBy('name', 'asc')
     .catch(err => {
       console.error(`Error in /api/routes GET: ${err}`);

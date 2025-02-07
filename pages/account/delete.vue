@@ -1,11 +1,7 @@
 <template>
   <NuxtLayout name="after-login">
     <v-sheet class="d-flex flex-column align-center justify-center" color="#333" width="100%" height="100%">
-      <v-card class="border-card mt-8 rounded-xl" width="400px" max-width="90%" variant="elevated">
-          <v-card-title class="text-center text-h5 font-weight-bold">
-            <span class="headline">Delete Account</span>
-          </v-card-title>
-          <v-divider class="mx-3"/>
+      <DefaultCard class="mt-8 rounded-xl" card-title="Delete Account">
           <v-card-text>
             <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
               <v-text-field v-model="password" label="Password" type="password" :rules="[rules.required]"></v-text-field>
@@ -19,12 +15,14 @@
             <div class="text-h6">Error</div>
             <p>{{ errorText }}</p>
           </v-snackbar>
-        </v-card>
+      </DefaultCard>
     </v-sheet>
   </NuxtLayout>
 </template>
 
 <script setup>
+  import defaultCard from '~/components/DefaultCard.vue';
+
   const { $api } = useNuxtApp();
 
   const session = useUserSession();
@@ -69,6 +67,7 @@
       // Delete session data
       session.value = null;
       authenticated.value = undefined;
+      clearNuxtData();
 
       await navigateTo('/login');
     })

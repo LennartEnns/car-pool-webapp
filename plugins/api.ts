@@ -40,6 +40,7 @@ export default defineNuxtPlugin((nuxtApp) => {
           // Clear session data
           useUserSession().value = null;
           useCookie('authenticated').value = undefined;
+          clearNuxtData();
 
           await nuxtApp.runWithContext(() => navigateTo('/login'));
           return;

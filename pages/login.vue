@@ -1,10 +1,6 @@
 <template>
 	<NuxtLayout name="checkin-pages">
-        <v-card class="border-card mt-8 rounded-xl" width="400px" max-width="90%" variant="elevated">
-            <v-card-title class="text-center text-h5 font-weight-bold">
-                <span class="headline">Sign in</span>
-            </v-card-title>
-            <v-divider class="mx-3"/>
+        <DefaultCard class="mt-8 rounded-xl" card-title="Sign In">
             <v-card-text>
                 <v-form @submit.prevent="submit" v-model="formValid" validate-on="submit lazy">
                     <v-text-field v-model="username" label="Username" type="text" :rules="[rules.requiredNotBlank, rules.validUsername]" :maxLength="userLimits.username"></v-text-field>
@@ -21,11 +17,11 @@
                     </div>
                 </v-form>
             </v-card-text>
-            <v-snackbar v-model="showError" color="error" location="top" vertical timeout="4000">
-                <div class="text-h6">Error</div>
-                <p>{{ errorText }}</p>
-            </v-snackbar>
-        </v-card>
+        </DefaultCard>
+        <v-snackbar v-model="showError" color="error" location="top" vertical timeout="4000">
+            <div class="text-h6">Error</div>
+            <p>{{ errorText }}</p>
+        </v-snackbar>
 	</NuxtLayout>
 </template>
 
@@ -34,6 +30,7 @@
     import { userLimits } from '~/commonLimits';
     import encodeBasicAuth from '~/utils/auth/encodeBasicAuth';
     import { useUserSession } from '~/composables/useUserSession';
+    import DefaultCard from '~/components/DefaultCard.vue';
 
     const session = useUserSession();
     const authenticated = useCookie('authenticated');

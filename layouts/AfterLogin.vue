@@ -1,22 +1,22 @@
 <template>
-  <v-app-bar color="primary">
-    <v-icon icon="mdi-home" class="icon ml-2 mr-2" @click="returnHome" />
-    <v-app-bar-title class="flex text-center font-weight-bold mx-auto">Car Pool Cost Distributor</v-app-bar-title>
-    <v-btn icon>
-      <v-icon class="icon">mdi-account</v-icon>
-      <v-menu activator="parent">
-        <v-list>
-          <v-list-item prepend-icon="mdi-account-settings" @click="onAccountSettings">
-            <v-list-item-title>Account Settings</v-list-item-title>
-          </v-list-item>
-          <v-list-item color="red" prepend-icon="mdi-logout" @click="onLogout">
-            <v-list-item-title>Logout</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-btn>
-  </v-app-bar>
   <v-main width="100%" height="100%">
+    <v-app-bar color="primary">
+      <v-icon icon="mdi-home" class="icon ml-2 mr-2" @click="returnHome" />
+      <v-app-bar-title class="flex text-center font-weight-bold mx-auto">Car Pool Cost Distributor</v-app-bar-title>
+      <v-btn icon>
+        <v-icon class="icon">mdi-account</v-icon>
+        <v-menu activator="parent">
+          <v-list>
+            <v-list-item prepend-icon="mdi-account-settings" @click="onAccountSettings">
+              <v-list-item-title>Account Settings</v-list-item-title>
+            </v-list-item>
+            <v-list-item color="red" prepend-icon="mdi-logout" @click="onLogout">
+              <v-list-item-title>Logout</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+    </v-app-bar>
     <slot />
   </v-main>
 </template>

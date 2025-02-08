@@ -11,10 +11,19 @@ export default defineEventHandler(async (event) => {
   if ('userID' in query.data && !!query.data.userID && query.data.userID !== event.context.user?.userID) {
     throw createError(error403);
   }
+
+  // Implicitly use preview mode if vehicle is not requested by ID
+  let preview = !('vehicleID' in query.data);
+  if ('preview' in query.data) {
+    preview = (query.data.preview === 'true');
+    delete query.data.preview;
+  }
+
   const searchObj = { ...query.data, userID: 'userID' in query.data ? (query.data.userID || event.context.user?.userID) : event.context.user?.userID };
+  const sqlAttributes = preview ? ['vehicleID', 'name'] : ['vehicleID', 'name', 'model', 'description', 'consumption', 'electric'];
 
   return await knex('vehicle')
-    .select('vehicleID', 'name', 'model', 'description', 'consumption', 'electric')
+    .select(sqlAttributes)
     .where(searchObj)
     .orderBy('name', 'asc')
     .catch(err => {

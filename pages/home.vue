@@ -1,16 +1,18 @@
 <template>
-  <NuxtLayout name="after-login" ref="parentLayout">
+  <NuxtLayout name="after-login">
     <v-sheet class="overflow-y-hidden" color="#333" width="100%" height="100%">
       <v-fab id="edit-fab" elevation="8" icon="mdi-plus" color="primary" location="bottom right" app style="bottom: 60px;" />
       <v-sheet v-if="selectedRole === 'driver'" class="d-flex flex-column align-center overflow-y-auto" width="100%" height="100%" color="transparent">
         <ClientOnly>
-          <RoutesPreviewList cardTitle="My Routes" :routes="dRoutes" deletable @delete="onDeleteRoute" />
+          <RoutesPreviewList cardTitle="Your Routes" :routes="dRoutes" deletable @delete="onDeleteRoute" />
         </ClientOnly>
       </v-sheet>
       <v-sheet v-else class="d-flex flex-column align-center overflow-y-auto" width="100%" height="100%" color="transparent">
-        <div style="font-size: 10rem; text-wrap: wrap;">Passenger Screen</div>
+        <ClientOnly>
+          <RoutesPreviewList cardTitle="Your Routes" :routes="pRoutes" placeholder="Not involved in any routes" />
+        </ClientOnly>
       </v-sheet>
-      <v-bottom-navigation class="bottom-nav" v-model="selectedRole" grow color="cyan" bg-color="grey-darken-4">
+      <v-bottom-navigation class="bottom-nav" v-model="selectedRole" grow color="cyan" bg-color="grey-darken-4" mandatory>
         <v-btn value="driver">
           <v-icon size="xx-large">mdi-car</v-icon>
           <span class="nav-text">For Drivers</span>
@@ -37,8 +39,9 @@
 
 <script setup>
   const { $api } = useNuxtApp();
+  const preferredRole = usePreferredRole();
 
-  const selectedRole = ref('driver');
+  const selectedRole = ref((!!preferredRole.value && preferredRole.value === 'passenger') ? 'passenger' : 'driver');
   const showError = ref(false);
   const errorText = ref('');
   const loading = ref(false);
@@ -46,15 +49,30 @@
   // Initial fetching
   const lazy = { lazy: true, server: false };
   // 'd' = driver, 'p' = passenger
-  const { data: dRoutes, status: dRoutesStatus } = await useApi('/api/routes',
-    { ...lazy, query: {
-      preview: true,
-    }}
-  );
+  const { data: dRoutes, status: dRoutesStatus, execute: executeFetchDRoutes } = await useApi('/api/routes', {
+    ...lazy,
+    immediate: (selectedRole.value === 'driver'),
+  });
+  const { data: pRoutes, status: pRoutesStatus, execute: executeFetchPRoutes } = await useApi('/api/routes', {
+    ...lazy,
+    query: { passenger: true },
+    immediate: (selectedRole.value === 'passenger'),
+  });
 
-  // Watch fetch statuses, show error if any status is 'error'
+  // Watch tab and trigger fetch if necessary
+  watch(selectedRole, (role) => {
+    preferredRole.value = role; // Save preferred role
+    if (role === 'passenger' && pRoutesStatus.value === 'idle') {
+      executeFetchPRoutes();
+    } else if (role === 'driver' && dRoutesStatus.value === 'idle') {
+      executeFetchDRoutes();
+    }
+  });
+
+  // Watch fetch statuses
   const fetchErrorText = 'Error fetching some data';
   watch(dRoutesStatus, (status) => {
+    loading.value = (status === 'pending');
     if (status === 'error') {
       errorText.value = fetchErrorText;
       showError.value = true;

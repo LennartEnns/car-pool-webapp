@@ -36,6 +36,10 @@
 
 <script setup>
   defineProps({
+    cardIcon: {
+      type: String,
+      required: true,
+    },
     cardTitle: {
       type: String,
       required: true,
@@ -69,12 +73,6 @@
     showDeleteDialog.value = false;
     emit('delete', index);
   }
-
-  // Computes whether the current UTC date is within the range of the start and end dates
-  const isUTCInRange = (startDate, endDate) => {
-    const now = new Date();
-    return (!startDate || new Date(startDate) <= now) && (!endDate || now <= new Date(endDate));
-  };
 </script>
 
 <style scoped>

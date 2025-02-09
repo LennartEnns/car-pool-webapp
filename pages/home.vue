@@ -2,14 +2,23 @@
   <NuxtLayout name="after-login">
     <v-sheet class="overflow-y-hidden" color="#333" width="100%" height="100%">
       <v-fab id="edit-fab" elevation="8" icon="mdi-plus" color="primary" location="bottom right" app style="bottom: 60px;" />
-      <v-sheet v-if="selectedRole === 'driver'" class="d-flex flex-column align-center overflow-y-auto" width="100%" height="100%" color="transparent">
-        <ClientOnly>
-          <RoutesPreviewList cardTitle="Your Routes" :routes="dRoutes" deletable @delete="onDeleteRoute" />
-        </ClientOnly>
+      <v-sheet v-if="selectedRole === 'driver'" class="d-flex flex-column pb-4 overflow-y-auto" width="100%" height="100%" color="transparent">
+        <v-row justify="center" no-gutters width="100%">
+          <v-col :cols="cols">
+            <ClientOnly>
+              <RoutesPreviewList class="mx-auto" cardTitle="Routes" :route-data="dRoutes || []" deletable @delete="onDeleteRoute" />
+            </ClientOnly>
+          </v-col>
+          <v-col :cols="cols">
+            <ClientOnly>
+              <VehiclesPreviewList class="mx-auto" cardTitle="Vehicles" :vehicles="testVehicles || []" deletable @delete="onDeleteVehicle" />
+            </ClientOnly>
+          </v-col>
+        </v-row>
       </v-sheet>
-      <v-sheet v-else class="d-flex flex-column align-center overflow-y-auto" width="100%" height="100%" color="transparent">
+      <v-sheet v-else class="d-flex flex-column pb-4 overflow-y-auto" width="100%" height="100%" color="transparent">
         <ClientOnly>
-          <RoutesPreviewList cardTitle="Your Routes" :routes="pRoutes" placeholder="Not involved in any routes" />
+          <RoutesPreviewList class="mx-auto" cardTitle="Routes" :route-data="pRoutes || []" placeholder="Not involved in any routes" />
         </ClientOnly>
       </v-sheet>
       <v-bottom-navigation class="bottom-nav" v-model="selectedRole" grow color="cyan" bg-color="grey-darken-4" mandatory>
@@ -38,8 +47,15 @@
 </template>
 
 <script setup>
+  import { useDisplay } from 'vuetify';
+  const testVehicles = []
+  for (let i = 0; i < 100; i++) {
+    testVehicles.push({ name: 'Test' });
+  }
+
   const { $api } = useNuxtApp();
   const preferredRole = usePreferredRole();
+  const { mdAndUp } = useDisplay();
 
   const selectedRole = ref((!!preferredRole.value && preferredRole.value === 'passenger') ? 'passenger' : 'driver');
   const showError = ref(false);
@@ -48,11 +64,19 @@
 
   // Initial fetching
   const lazy = { lazy: true, server: false };
+
   // 'd' = driver, 'p' = passenger
+  // Driver data
   const { data: dRoutes, status: dRoutesStatus, execute: executeFetchDRoutes } = await useApi('/api/routes', {
     ...lazy,
     immediate: (selectedRole.value === 'driver'),
   });
+  const { data: dVehicles, status: dVehiclesStatus, execute: executeFetchDVehicles } = await useApi('/api/vehicles', {
+    ...lazy,
+    immediate: (selectedRole.value === 'driver'),
+  });
+
+  // Passenger data
   const { data: pRoutes, status: pRoutesStatus, execute: executeFetchPRoutes } = await useApi('/api/routes', {
     ...lazy,
     query: { passenger: true },
@@ -64,35 +88,40 @@
     preferredRole.value = role; // Save preferred role
     if (role === 'passenger' && pRoutesStatus.value === 'idle') {
       executeFetchPRoutes();
-    } else if (role === 'driver' && dRoutesStatus.value === 'idle') {
-      executeFetchDRoutes();
+    } else if (role === 'driver') {
+      if (dRoutesStatus.value === 'idle') executeFetchDRoutes();
+      if (dVehiclesStatus.value === 'idle') executeFetchDVehicles();
     }
   });
 
   // Watch fetch statuses
   const fetchErrorText = 'Error fetching some data';
-  watch(dRoutesStatus, (status) => {
-    loading.value = (status === 'pending');
-    if (status === 'error') {
-      errorText.value = fetchErrorText;
-      showError.value = true;
+  watch([dRoutesStatus, dVehiclesStatus, pRoutesStatus], (statuses) => {
+    loading.value = false;
+    for (const status in statuses) {
+      if (status === 'pending') loading.value = true;
+      if (status === 'error') {
+        errorText.value = fetchErrorText;
+        showError.value = true;
+      }
     }
   });
 
-  async function onDeleteRoute(index) {
+  // Delete handlers
+  async function requestDelete(path, query, objectsRef, index, name) {
     loading.value = true;
 
-    $api('/api/routes', {
+    $api(path, {
       method: 'DELETE',
-      query: { routeID: dRoutes.value[index].routeID },
+      query,
     })
     .then(() => {
-      dRoutes.value.splice(index, 1);
+      objectsRef.value.splice(index, 1);
     })
     .catch((error) => {
       switch (error.data?.statusCode) {
         default:
-        errorText.value = 'Unexpected Error deleting route' + (error.data?.statusCode ? `: ${error.data.statusCode} ${error.data.statusText || ''}` : '');
+        errorText.value = `Unexpected Error deleting ${name}` + (error.data?.statusCode ? `: ${error.data.statusCode} ${error.data.statusText || ''}` : '');
         break;
       }
       showError.value = true;
@@ -101,6 +130,15 @@
       loading.value = false;
     });
   }
+  async function onDeleteRoute(index) {
+    requestDelete('/api/routes', { routeID: dRoutes.value[index].routeID }, dRoutes, index, 'route');
+  }
+  async function onDeleteVehicle(index) {
+    requestDelete('/api/vehicles', { vehicleID: dVehicles.value[index].vehicleID }, dVehicles, index, 'vehicle');
+  }
+
+  // Reactive style setup
+  const cols = computed(() => mdAndUp.value ? 6 : 12);
 </script>
 
 <style scoped>

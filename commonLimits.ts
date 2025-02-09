@@ -4,8 +4,8 @@ export const userLimits = {
 }
 
 export const vehicleLimits = {
-    name: 40,
-    model: 40,
+    name: 20,
+    model: 30,
     description: 255,
 }
 

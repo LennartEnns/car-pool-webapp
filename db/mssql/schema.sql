@@ -13,8 +13,8 @@ CREATE TABLE User (
 CREATE TABLE Vehicle (
     vehicleID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     userID UNIQUEIDENTIFIER NOT NULL,
-    name NVARCHAR(40) NOT NULL,
-    model NVARCHAR(40) NULL,
+    name NVARCHAR(20) NOT NULL,
+    model NVARCHAR(30) NULL,
     description NVARCHAR(255) NOT NULL DEFAULT '',
     consumption DECIMAL(10, 2) NOT NULL, -- e.g., fuel consumption in liters/100km or kWh/100km
     electric BIT NOT NULL,               -- boolean: 1 for electric, 0 for non-electric
@@ -24,7 +24,7 @@ CREATE TABLE Vehicle (
 CREATE TABLE Route (
     routeID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     userID UNIQUEIDENTIFIER NOT NULL,
-    vehicleID UNIQUEIDENTIFIER NOT NULL,
+    vehicleID UNIQUEIDENTIFIER NULL,
     name NVARCHAR(50) NOT NULL,
     description NVARCHAR(255) NOT NULL DEFAULT '',
     distance DECIMAL(10, 2) NOT NULL, -- in kilometers

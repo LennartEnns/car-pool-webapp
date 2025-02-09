@@ -6,7 +6,7 @@ export function up(knex) {
     return knex.schema.createTable('Route', (table) => {
         table.uuid('routeID').primary().defaultTo(knex.fn.uuid());
         table.uuid('userID').notNullable();
-        table.uuid('vehicleID').notNullable();
+        table.uuid('vehicleID').nullable();
         table.string('name', 50).notNullable();
         table.string('description', 255).notNullable().defaultTo('');
         table.decimal('distance', 10, 2).notNullable().comment('In kilometers');

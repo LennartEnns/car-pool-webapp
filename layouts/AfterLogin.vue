@@ -1,7 +1,8 @@
 <template>
   <v-main width="100%" height="100%">
     <v-app-bar color="primary">
-      <v-icon icon="mdi-home" class="icon ml-2 mr-2" @click="returnHome" />
+      <v-icon v-if="showBackButton" icon="mdi-arrow-left-bold" class="icon ml-2" @click="goToLastRoute" />
+      <v-icon icon="mdi-home" class="icon ml-2" @click="returnHome" />
       <v-app-bar-title class="flex text-center font-weight-bold mx-auto">Car Pool Cost Distributor</v-app-bar-title>
       <v-btn icon>
         <v-icon class="icon">mdi-account</v-icon>
@@ -22,8 +23,12 @@
 </template>
 
 <script setup>
+  const { $router } = useNuxtApp();
   const session = useUserSession();
   const authenticated = useCookie('authenticated');
+  const showBackButton = computed(() => {
+    return $router.currentRoute.value.path !== '/home';
+  });
 
   onMounted(() => {
     // Log out if no session data is present 
@@ -52,6 +57,9 @@
   };
   const returnHome = async () => {
     await navigateTo('/home');
+  };
+  const goToLastRoute = async () => {
+    $router.back();
   };
 
   onMounted(() => {
